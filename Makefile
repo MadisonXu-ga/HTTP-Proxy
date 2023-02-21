@@ -1,9 +1,16 @@
-TARGETS=proxy
+CC = g++
+CFLAGS = -g -pthread
+TARGET = proxy
+SRCS = main.cpp proxy.cpp server.cpp
+OBJS = $(SRCS:.cpp=.o)
 
-all: $(TARGETS)
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS)
+
+%.o: %.cpp
+	$(CC) $(CFLAGS) -c -o $@ $<
+
 clean:
-	rm -f $(TARGETS)
-
-proxy: main.cpp proxy.cpp
-	g++ -g -o $@ $<
-
+	$(RM) $(OBJS) $(TARGET)

@@ -3,5 +3,6 @@
 
 class Request{
     string request_content;
-    string 
+    string host;
+    
 }
