@@ -65,13 +65,6 @@ int Server::acceptConnection() {
     exit(-1);
   }
 
-  char request_message[INT16_MAX] = {0};
-  int len = recv(connect_fd, &request_message, sizeof(request_message), 0);
-  std::cout << len << std::endl;
-  std::cout << request_message << std::endl;
-
-  close(connect_fd);
-
   return connect_fd;
 }
 

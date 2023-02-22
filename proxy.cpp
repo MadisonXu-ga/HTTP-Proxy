@@ -1,5 +1,5 @@
 #include "proxy.hpp"
-
+#include "request.hpp"
 void Proxy::makeDaemon() {
   // pid_t pid = fork();
   // if (pid < 0) {
@@ -56,25 +56,42 @@ void Proxy::run() {
     //
     std::cout << "??" << std::endl;
     int client_fd = proxy_server.acceptConnection();
-    pthread_t thread;
-    pthread_create(&thread, NULL, handleRequest, &client_fd);
+    // pthread_t thread;
+    // pthread_create(&thread, NULL, handleRequest, &client_fd);
+    handleRequest(&client_fd);
     close(client_fd);
   }
 }
 
 void * Proxy::handleRequest(void * fd) {
   std::cout << "handle request begin" << std::endl;
+  
   int client_fd = *((int *)fd);
   char request_message[INT16_MAX] = {0};
   int len = recv(client_fd, &request_message, sizeof(request_message), 0);
-  std::cout << len << std::endl;
-  std::cout << request_message << std::endl;
+  if (len <= 0){
+    return NULL;
+  }
+  string request_str(request_message);
+  Request initial_request(request_str);
+  std::cout << "Request content is:" << initial_request.request_content << endl;
+  initial_request.parseMethod();
+  std::cout << "Method is:" << initial_request.method << endl;
+  initial_request.parseHost();
+  std::cout << "Host is:" << initial_request.host << endl;
+  std::cout << "Port is:" << initial_request.port << endl;
+  //initial_request.parseMaxage();
+  //std::cout << "max_age is:" << initial_request.max_age << endl;
+  //initial_request.parseURI();
+  //std::cout << "URI is:" << initial_request.URI << endl;
+  //std::cout << "len is: " << len << std::endl;
+  //std::cout << request_message << std::endl;
 
   if (len <= 0) {
     //error to logfile, now I just print to std::cout
     return NULL;
   }
-
+  /*
   Request req(request_message);
   if (req.method == "GET") {
     handleGET(./);
@@ -87,6 +104,7 @@ void * Proxy::handleRequest(void * fd) {
     // error print to logfile
     return NULL;
   }
+  */
 
   std::cout << "handle request end" << std::endl;
 
@@ -100,5 +118,3 @@ void Proxy::handleGET(){
 }
 
 void Proxy::handePOST(){}
-
-void Proxy::handleGET(){}
