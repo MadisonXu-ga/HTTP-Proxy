@@ -1,11 +1,7 @@
 #include "proxy.hpp"
-<<<<<<< HEAD
 
-#include "client.hpp"
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-=======
-#include "request.hpp"
->>>>>>> test
 void Proxy::makeDaemon() {
   // pid_t pid = fork();
   // if (pid < 0) {
@@ -62,57 +58,53 @@ void Proxy::run() {
     //
     std::cout << "??" << std::endl;
     int client_fd = proxy_server.acceptConnection();
-    // pthread_t thread;
-    // pthread_create(&thread, NULL, handleRequest, &client_fd);
-    handleRequest(&client_fd);
-    close(client_fd);
+    pthread_t thread;
+    pthread_create(&thread, NULL, handleRequest, &client_fd);
+    // handleRequest(&client_fd);
+    // close(client_fd);   // ?????? but how can I close this fd???
   }
 }
 
 void * Proxy::handleRequest(void * fd) {
   std::cout << "handle request begin" << std::endl;
-  
+
   int client_fd = *((int *)fd);
   char request_message[INT16_MAX] = {0};
   int len = recv(client_fd, &request_message, sizeof(request_message), 0);
-  if (len <= 0){
+  std::cout << "len: " << len << std::endl;
+  if (len <= 0) {
     return NULL;
   }
+  // std::cout << request_message << std::endl;
   string request_str(request_message);
-  Request initial_request(request_str);
-  std::cout << "Request content is:" << initial_request.request_content << endl;
-  initial_request.parseMethod();
-  std::cout << "Method is:" << initial_request.method << endl;
-  initial_request.parseHost();
-  std::cout << "Host is:" << initial_request.host << endl;
-  std::cout << "Port is:" << initial_request.port << endl;
-  //initial_request.parseMaxage();
-  //std::cout << "max_age is:" << initial_request.max_age << endl;
-  //initial_request.parseURI();
-  //std::cout << "URI is:" << initial_request.URI << endl;
-  //std::cout << "len is: " << len << std::endl;
-  //std::cout << request_message << std::endl;
+  Request req(request_str);
+  // Request initial_request(request_str);
+  // std::cout << "Request content is:" << initial_request.request_content << endl;
+  // initial_request.parseMethod();
+  std::cout << "Method is:" << req.getMethod() << endl;
+  std::cout << "Host is:" << req.getHost() << endl;
+  std::cout << "Port is:" << req.getPort() << endl;
 
   if (len <= 0) {
     //error to logfile, now I just print to std::cout
     return NULL;
   }
-  /*
-  Request req(request_message);
-  if (req.method == "GET") {
-    handleGET(req, client_fd);
+
+  if (req.getMethod() == "GET") {
+    // handleGET(req, client_fd);
+    return NULL;
   }
-  else if (req.method == "POST") {
-    handlePOST(req, client_fd);
+  else if (req.getMethod() == "POST") {
+    // handlePOST(req, client_fd);
+    return NULL;
   }
-  else if (req.method == "CONNECT") {
+  else if (req.getMethod() == "CONNECT") {
     handleCONNECT(req, client_fd);
   }
   else {
     // error print to logfile
     return NULL;
   }
-  */
 
   std::cout << "handle request end" << std::endl;
 
@@ -126,33 +118,65 @@ void Proxy::handleGET() {
 void Proxy::handlePOST() {
 }
 
-<<<<<<< HEAD
 void Proxy::handleCONNECT(Request req, int client_fd) {
-  // Client my_client(req.getHost(), req.getPost());
-  Client my_client("www.google.com", "443");
-  my_client.createClient();
+  cout << "handleConnect begin  HOST: " << req.getHost().c_str() << " "
+       << req.getPort().c_str() << endl;
+  pthread_mutex_lock(&mutex);
+  Client my_client(req.getHost().c_str(), req.getPort().c_str());
+  // Client my_client("www.google.com", "443");
+  // my_client.createClient();
   int my_client_fd = my_client.createConnection();
+  pthread_mutex_unlock(&mutex);
+  cout << "Connect to remote server successfully!" << endl;
+
+  std::string response = "HTTP/1.1 200 OK\r\n\r\n";
+  send(client_fd, response.c_str(), response.length(), 0);
 
   fd_set readfds;
+  int maxfd = std::max(my_client_fd, client_fd);
 
   while (1) {
-    char message[INT16_MAX];
-    FD_ZERO(&readfds);
 
+    FD_ZERO(&readfds);
     FD_SET(client_fd, &readfds);
     FD_SET(my_client_fd, &readfds);
 
-    int status = select(FD_SETSIZE, &readfds, NULL, NULL, NULL);
-    if(status==-1){
+    int status = select(maxfd + 1, &readfds, NULL, NULL, NULL);
+    if (status == -1) {
       // error
       exit(EXIT_FAILURE);
     }
 
-    if(FD_ISSET(client_fd, &readfds)){
-      recv(client_fd, )
+    if (FD_ISSET(client_fd, &readfds)) {
+      char request_message[65536] = {0};
+      int len_recv = recv(client_fd, request_message, sizeof(request_message), 0);
+      cout << "Receive length: " << len_recv << endl;
+      // std::cout << "Receive from client: " << request_message << std::endl;
+      if (len_recv <= 0) {
+        // error or end?
+        return;
+      }
+      int len_send = send(my_client_fd, request_message, len_recv, 0);
+      if (len_send <= 0) {
+        // I think this is an error?
+        return;
+      }
+    }
+
+    if (FD_ISSET(my_client_fd, &readfds)) {
+      char response_message[65536] = {0};
+      int len_recv = recv(my_client_fd, response_message, sizeof(response_message), 0);
+      cout << "Receive length: " << len_recv << endl;
+      // std::cout << "Receive from remote server: " << response_message << std::endl;
+      if (len_recv == -1) {
+        // error or end?
+        return;
+      }
+      int len_send = send(client_fd, response_message, len_recv, 0);
+      if (len_send == -1) {
+        // I think this is an error?
+        return;
+      }
     }
   }
 }
-=======
-void Proxy::handePOST(){}
->>>>>>> test

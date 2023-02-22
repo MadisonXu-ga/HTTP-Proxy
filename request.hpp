@@ -1,19 +1,24 @@
+#include <cstring>
 #include <iostream>
 #include <string>
-#include <cstring>
+
 using namespace std;
 
-class Request{
-public:
-    string request_content;
-    string method;
-    string host;
-    string port;
+class Request {
+  string request_content;
+  string method;
+  string host;
+  string port;
 
-    string getContent();
-    string getMethod();
-    string getHost();
-    void parseMethod();
-    void parseHost();
-    Request(string init_request) : request_content(init_request){}
+ public:
+  Request(string init_request) : request_content(init_request) {
+    parseMethod();
+    parseHost();
+  }
+  string getContent();
+  string getMethod();
+  string getHost();
+  string getPort();
+  void parseMethod();
+  void parseHost();
 };

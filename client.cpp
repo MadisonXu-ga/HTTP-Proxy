@@ -6,10 +6,13 @@ void Client::init_addrinfo() {
   host_info.ai_family = AF_UNSPEC;
   host_info.ai_socktype = SOCK_STREAM;
 
-  int status = getaddrinfo(hostname, port, &host_info, &host_info_list);
+  std::cout << "Client::init_addrinfo hostname: " << hostname << std::endl;
+  std::cout << "Client::init_addrinfo port: " << port << std::endl;
+
+  int status = getaddrinfo(this->hostname, this->port, &host_info, &host_info_list);
   if (status != 0) {
-    cerr << "Error: cannot get address info for host" << endl;
-    cerr << "  (" << hostname << "," << port << ")" << endl;
+    std::cerr << "Error: cannot get address info for host" << std::endl;
+    std::cerr << "  (" << this->hostname << "," << this->port << ")" << std::endl;
     exit(EXIT_FAILURE);
   }
 }
@@ -19,17 +22,17 @@ void Client::createSocket() {
               host_info_list->ai_socktype,
               host_info_list->ai_protocol);
   if (fd == -1) {
-    cerr << "Error: cannot create socket" << endl;
-    // cerr << "  (" << hostname << "," << port << ")" << endl;
+    std::cerr << "Error: cannot create socket" << std::endl;
+    // std::cerr << "  (" << hostname << "," << port << ")" << std::endl;
     exit(EXIT_FAILURE);
   }
 }
 
 int Client::createConnection() {
-  status = connect(socket_fd, host_info_list->ai_addr, host_info_list->ai_addrlen);
+  int status = connect(fd, host_info_list->ai_addr, host_info_list->ai_addrlen);
   if (status == -1) {
-    cerr << "Error: cannot connect to socket" << endl;
-    // cerr << "  (" << hostname << "," << port << ")" << endl;
+    std::cerr << "Error: cannot connect to socket" << std::endl;
+    // std::cerr << "  (" << hostname << "," << port << ")" << std::endl;
     exit(EXIT_FAILURE);
   }
   return fd;

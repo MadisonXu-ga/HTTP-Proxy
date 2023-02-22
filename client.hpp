@@ -5,8 +5,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include <iostream>
 #include <cstring>
+#include <iostream>
 
 class Client {
   const char * hostname;
@@ -18,7 +18,11 @@ class Client {
 
  public:
   Client() : hostname(NULL), port(NULL) {}
-  Client(const char * hostname, const char * port) : hostname(hostname), port(port) {}
+  Client(const char * hostname, const char * port) : hostname(hostname), port(port) {
+    std::cout << "Client input hostname: " << hostname << std::endl;
+    std::cout << "Client's hostname: " << this->hostname << std::endl;
+    createClient();
+  }
   ~Client() {
     free(host_info_list);
     close(fd);
@@ -27,5 +31,5 @@ class Client {
   void createClient();
   void init_addrinfo();
   void createSocket();
-  void createConnection();
-}
+  int createConnection();
+};

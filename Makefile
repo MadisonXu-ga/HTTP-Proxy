@@ -1,7 +1,7 @@
 CC = g++
 CFLAGS = -g -pthread
 TARGET = proxy
-SRCS = main.cpp proxy.cpp server.cpp request.cpp
+SRCS = main.cpp proxy.cpp server.cpp request.cpp client.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 all: $(TARGET)

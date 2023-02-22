@@ -8,6 +8,8 @@
 #include <iostream>
 #include <string>
 
+#include "client.hpp"
+#include "request.hpp"
 #include "server.hpp"
 
 class Proxy {
@@ -23,5 +25,5 @@ class Proxy {
   static void * handleRequest(void * fd);
   static void handleGET();
   static void handlePOST();
-  static void handleCONNECT();
+  static void handleCONNECT(Request req, int fd);
 };
