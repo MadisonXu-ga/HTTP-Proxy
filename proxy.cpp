@@ -1,5 +1,7 @@
 #include "proxy.hpp"
 
+#include "client.hpp"
+
 void Proxy::makeDaemon() {
   // pid_t pid = fork();
   // if (pid < 0) {
@@ -77,11 +79,13 @@ void * Proxy::handleRequest(void * fd) {
 
   Request req(request_message);
   if (req.method == "GET") {
-    handleGET(./);
+    handleGET(req, client_fd);
   }
   else if (req.method == "POST") {
+    handlePOST(req, client_fd);
   }
   else if (req.method == "CONNECT") {
+    handleCONNECT(req, client_fd);
   }
   else {
     // error print to logfile
@@ -93,12 +97,36 @@ void * Proxy::handleRequest(void * fd) {
   return NULL;
 }
 
-void Proxy::handleGET(){
+void Proxy::handleGET() {
   // Need to consider cache
-
-  
 }
 
-void Proxy::handePOST(){}
+void Proxy::handlePOST() {
+}
 
-void Proxy::handleGET(){}
+void Proxy::handleCONNECT(Request req, int client_fd) {
+  // Client my_client(req.getHost(), req.getPost());
+  Client my_client("www.google.com", "443");
+  my_client.createClient();
+  int my_client_fd = my_client.createConnection();
+
+  fd_set readfds;
+
+  while (1) {
+    char message[INT16_MAX];
+    FD_ZERO(&readfds);
+
+    FD_SET(client_fd, &readfds);
+    FD_SET(my_client_fd, &readfds);
+
+    int status = select(FD_SETSIZE, &readfds, NULL, NULL, NULL);
+    if(status==-1){
+      // error
+      exit(EXIT_FAILURE);
+    }
+
+    if(FD_ISSET(client_fd, &readfds)){
+      recv(client_fd, )
+    }
+  }
+}

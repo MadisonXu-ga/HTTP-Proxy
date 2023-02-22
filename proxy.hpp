@@ -22,6 +22,6 @@ class Proxy {
   void run();
   static void * handleRequest(void * fd);
   static void handleGET();
-  static void handePOST();
-  static void handleConnect();
+  static void handlePOST();
+  static void handleCONNECT();
 };
