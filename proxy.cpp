@@ -1,5 +1,7 @@
 #include "proxy.hpp"
 
+#include <vector>
+
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void Proxy::makeDaemon() {
@@ -69,14 +71,24 @@ void * Proxy::handleRequest(void * fd) {
   std::cout << "handle request begin" << std::endl;
 
   int client_fd = *((int *)fd);
-  char request_message[INT16_MAX] = {0};
-  int len = recv(client_fd, &request_message, sizeof(request_message), 0);
+  //pthread_mutex_lock(&mutex);
+  // char request_message[1024 * 1024] = {0};
+  vector<char> request_message(1024 * 1024);
+  int len = recv(client_fd, &request_message.data()[0], 1000 * 1000, 0);
+  //pthread_mutex_unlock(&mutex);make
   std::cout << "len: " << len << std::endl;
+  std::cout << "sizeof(request_message): " << sizeof(request_message) << std::endl;
+  // makestd::cout << "Let me see see: " << request_message << std::endl;
   if (len <= 0) {
     return NULL;
   }
-  // std::cout << request_message << std::endl;
-  string request_str(request_message);
+
+  request_message.data()[len] = '\0';
+
+  string request_str(request_message.begin(), request_message.end());
+
+  std::cout << "et me see see: request_str: " << request_str << std::endl;
+
   Request req(request_str);
   // Request initial_request(request_str);
   // std::cout << "Request content is:" << initial_request.request_content << endl;
@@ -91,11 +103,12 @@ void * Proxy::handleRequest(void * fd) {
   }
 
   if (req.getMethod() == "GET") {
-    // handleGET(req, client_fd);
+    handleGET(req, client_fd);
     return NULL;
   }
   else if (req.getMethod() == "POST") {
     // handlePOST(req, client_fd);
+    // handleCONNECT(req, client_fd);
     return NULL;
   }
   else if (req.getMethod() == "CONNECT") {
@@ -111,8 +124,37 @@ void * Proxy::handleRequest(void * fd) {
   return NULL;
 }
 
-void Proxy::handleGET() {
+void Proxy::handleGET(Request req, int client_fd) {
   // Need to consider cache
+  // cout << "handleGet begin  HOST: " << req.getHost().c_str() << " "
+  //      << req.getPort().c_str() << endl;
+  Client my_client(req.getHost().c_str(), req.getPort().c_str());
+
+  // connect to the remote server
+  int my_client_fd = my_client.createConnection();
+  cout << "Connect to remote server successfully!" << endl;
+
+  // send request to remote server
+  // char request_message[65536] = {0};
+  const char * request_message = req.getContent().c_str();
+  int client_len = send(my_client_fd, request_message, strlen(request_message), 0);
+  std::cout << "client_len" << client_len << std::endl;
+  std::cout << "GET request to remote server: " << request_message << std::endl;
+
+  // receive respond from remote server
+  char response_message[65536] = {0};
+  int server_len = recv(my_client_fd, response_message, sizeof(response_message), 0);
+  std::cout << "server_len" << server_len << std::endl;
+  std::cout << "GET receive: " << response_message << std::endl;
+  if (server_len <= 0) {
+    return;
+  }
+
+  // send resond to client
+  int send_len = send(client_fd, response_message, sizeof(response_message), 0);
+  std::cout << "send_len" << server_len << std::endl;
+  std::cout << "client GET receive: " << response_message << std::endl;
+  // int _len = send(my_client_fd, req.getContent(), );
 }
 
 void Proxy::handlePOST() {
@@ -121,12 +163,12 @@ void Proxy::handlePOST() {
 void Proxy::handleCONNECT(Request req, int client_fd) {
   cout << "handleConnect begin  HOST: " << req.getHost().c_str() << " "
        << req.getPort().c_str() << endl;
-  pthread_mutex_lock(&mutex);
+  // pthread_mutex_lock(&mutex);
   Client my_client(req.getHost().c_str(), req.getPort().c_str());
   // Client my_client("www.google.com", "443");
   // my_client.createClient();
   int my_client_fd = my_client.createConnection();
-  pthread_mutex_unlock(&mutex);
+  // pthread_mutex_unlock(&mutex);
   cout << "Connect to remote server successfully!" << endl;
 
   std::string response = "HTTP/1.1 200 OK\r\n\r\n";
@@ -136,7 +178,6 @@ void Proxy::handleCONNECT(Request req, int client_fd) {
   int maxfd = std::max(my_client_fd, client_fd);
 
   while (1) {
-
     FD_ZERO(&readfds);
     FD_SET(client_fd, &readfds);
     FD_SET(my_client_fd, &readfds);
@@ -167,13 +208,13 @@ void Proxy::handleCONNECT(Request req, int client_fd) {
       char response_message[65536] = {0};
       int len_recv = recv(my_client_fd, response_message, sizeof(response_message), 0);
       cout << "Receive length: " << len_recv << endl;
-      // std::cout << "Receive from remote server: " << response_message << std::endl;
-      if (len_recv == -1) {
+      std::cout << "Receive from remote server: " << response_message << std::endl;
+      if (len_recv <= 0) {
         // error or end?
         return;
       }
       int len_send = send(client_fd, response_message, len_recv, 0);
-      if (len_send == -1) {
+      if (len_send <= 0) {
         // I think this is an error?
         return;
       }
