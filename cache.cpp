@@ -17,7 +17,7 @@ void Cache::addToCache(Request req, Response res) {
   }
 
   // check if it is out of capacity
-  if(cacheQueue.size()==capacity){
+  if (cacheQueue.size() == capacity) {
     std::string isGoingToPop = cacheQueue.front();
     cacheQueue.pop();
     cachePipe.erase(isGoingToPop);
@@ -29,7 +29,7 @@ void Cache::addToCache(Request req, Response res) {
   cacheQueue.push(req.getURI());
 }
 
-bool Cache::checkValidate(Response res) {
+bool Cache::checkValidate(Response res, int request_id) {
   // should I check at request??
   std::time_t now =
       std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
@@ -38,11 +38,15 @@ bool Cache::checkValidate(Response res) {
   // ????? do i need max-age=0 for must-revalidate???
   // if no-cache, need to send a validation request before using any stored response
   if (res.no_cache || (res.must_revalidate && res.has_Maxage && res.getMaxage() == 0)) {
+    // ID: in cache, requires validation
+    std::cout << request_id << " in cache, requires validation" << std::endl;
     return false;
   }
 
   // this is a problem!!! max-age could not exist!!!!!!!!!! Fix this!!!!!!
   if (res.getExpires().empty() && !res.has_Maxage) {
+    // ID: in cache, valid
+    std::cout << request_id << ": in cache, valid" << std::endl;
     return true;
   }
 
@@ -57,8 +61,13 @@ bool Cache::checkValidate(Response res) {
     expires_time = response_receive_time + res.getMaxage() + res.getMaxstale();
   }
   if (expires_time < now) {
+    // ID: in cache, but expired at EXPIREDTIME
+    std::tm * utc = std::gmtime(&expires_time);
+    std::cout << request_id << ": in cache, but expired at " << std::asctime(utc);
     return false;
   }
+
+  std::cout << request_id << ": in cache, valid" << std::endl;
   return true;
 }
 
@@ -66,7 +75,7 @@ Response * Cache::getCacheResonse(Request req, int fd) {
   // update->return 200    not update return 304
   Response * res_in_cache = &cachePipe[req.getURI()];
   // validate, just return
-  if (checkValidate(*res_in_cache)) {
+  if (checkValidate(*res_in_cache, req.getRequestID())) {
     return res_in_cache;
   }
   // invalidate, need to ask server
@@ -78,6 +87,8 @@ Response * Cache::getCacheResonse(Request req, int fd) {
   validate_request += "Connection: close\r\n\r\n";
 
   // send request to server
+  // ID: Requesting "REQUEST" from SERVER
+  std::cout << req.getRequestID() << ": Requesting \"" << req.getFirstLine() << "\" from " << req.getHost() << std::endl;
   if (send(fd, validate_request.c_str(), validate_request.length(), 0) < 0) {
     std::cerr << "Error sending validate_request." << std::endl;
     // error
@@ -93,6 +104,9 @@ Response * Cache::getCacheResonse(Request req, int fd) {
   }
 
   Response * validate_response = new Response(response);
+  // ID: Received "RESPONSE" from	SERVER
+  std::cout << req.getRequestID() << ": Received \"" << validate_response->getStatus() << "\"" << std::endl;
+
   // 304 not modified
   if (validate_response->getCode() == "304") {
     // do i need to change max-age or something?

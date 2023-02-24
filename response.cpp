@@ -83,23 +83,26 @@ void Response:: parseCache_control()
         string Cache_str = response_content.substr(Cache_begin, Cache_end - Cache_begin);
         size_t length = Cache_str.size();
         size_t Cache_str_end = Cache_str.find("\r\n");
-        size_t last = 0;
         // max-age
-        size_t Maxage_begin = Cache_str.find("max-age=");
-        size_t Maxage_end = Cache_str.find(",",Maxage_begin);
-        if(Maxage_begin < length && Maxage_end < length)
+        //size_t Maxage_begin = Cache_str.find("max-age=");
+        //size_t Maxage_end = Cache_str.find(",",Maxage_begin);
+        if(Cache_str.find("max-age=") != string :: npos)
         {
-            max_age = stoul(Cache_str.substr(Maxage_begin, Maxage_end - Maxage_begin));
+            size_t Maxage_begin = Cache_str.find("max-age=");
             has_Maxage = true;
-        }
-        else if(Maxage_begin < length && Maxage_end > length) 
-        {
-            max_age = stoul(Cache_str.substr(Maxage_begin, Cache_str_end - Maxage_begin));
-            has_Maxage = true;
+            if(Cache_str.find(",",Maxage_begin) != string :: npos)
+            {
+                size_t Maxage_end = Cache_str.find(",",Maxage_begin);
+                max_age = stoul(Cache_str.substr(Maxage_begin, Maxage_end - Maxage_begin));
+            }
+            else
+            {
+                max_age = stoul(Cache_str.substr(Maxage_begin, Cache_str_end - Maxage_begin));
+            }
         }
         //max_stale
         size_t Maxstale_begin = Cache_str.find("max-stale=");
-        size_t Maxstale_end = Cache_str.find(",",Maxage_begin);
+        size_t Maxstale_end = Cache_str.find(",",Maxstale_begin);
         if(Maxstale_begin < length && Maxstale_end < length)
         {
             max_stale = stoul(Cache_str.substr(Maxstale_begin, Maxstale_end - Maxstale_begin));

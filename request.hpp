@@ -14,9 +14,10 @@ class Request {
   string port;
   string URI;
   string Fline;
+  int request_id;
 
  public:
-  Request(string init_request) : request_content(init_request) {
+  Request(string init_request, int request_id) : request_content(init_request), request_id(request_id) {
     parseFirstLine();
     parseMethod();
     parseURI();
@@ -28,6 +29,7 @@ class Request {
   string getHost();
   string getPort();
   string getURI();
+  int getRequestID();
   void parseMethod();
   void parseHost();
   void parseURI();

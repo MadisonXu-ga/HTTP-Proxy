@@ -62,8 +62,7 @@ void Proxy::run() {
   // need assign unique id to each request.
   int request_id = -1;
   while (true) {
-    //
-    std::cout << "??" << std::endl;
+    // std::cout << "??" << std::endl;
     std::pair<int, std::string> result = proxy_server.acceptConnection();
     int client_fd = result.first;
     std::string client_ip = result.second;
@@ -111,7 +110,7 @@ void * Proxy::handleRequest(void * args) {
   // std::cout << "et me see see: request_str: " << request_str << std::endl;
 
   // make a Request object
-  Request req(request_str);
+  Request req(request_str, request_id);
   // Request initial_request(request_str);
   // std::cout << "Request content is:" << initial_request.request_content << endl;
   // initial_request.parseMethod();
@@ -124,22 +123,22 @@ void * Proxy::handleRequest(void * args) {
   // ****************change it to log file later***********************//
   std::time_t now = std::time(nullptr);
   std::tm * utc = std::gmtime(&now);
-  std::cout << request_id << ": " << req.getFirstLine() << " from " << client_ip << " @ "
-            << std::asctime(utc);
+  std::cout << request_id << ": \"" << req.getFirstLine() << "\" from " << client_ip
+            << " @ " << std::asctime(utc);
 
   if (req.getMethod() == "GET") {
-    handleGET(req, client_fd);
+    handleGET(req, client_fd, request_id);
     // return NULL;
   }
   else if (req.getMethod() == "POST") {
     handlePOST(req, client_fd);
-    return NULL;
+    // return NULL;
   }
   else if (req.getMethod() == "CONNECT") {
     // ??? do i need to output here?
     // ID: Requesting "REQUEST" from SERVER
     // ****************change it to log file later***********************//
-    std::cout << request_id << ": Requesting " << req.getFirstLine() << " from "
+    std::cout << request_id << ": Requesting \"" << req.getFirstLine() << "\" from "
               << req.getHost() << std::endl;
     handleCONNECT(req, client_fd);
     // ID: Tunnel closed
@@ -150,13 +149,13 @@ void * Proxy::handleRequest(void * args) {
     // return NULL;
   }
 
-  // std::cout << "handle request end" << std::endl;
   close(client_fd);
 
+  pthread_exit(NULL);
   return NULL;
 }
 
-void Proxy::handleGET(Request req, int client_fd) {
+void Proxy::handleGET(Request req, int client_fd, int request_id) {
   // Need to consider cache
   // cout << "handleGet begin  HOST: " << req.getHost().c_str() << " "
   //      << req.getPort().c_str() << endl;
@@ -170,41 +169,59 @@ void Proxy::handleGET(Request req, int client_fd) {
   if (my_cache.isInCache(req)) {
     // response
     Response res_in_cache = *(my_cache.getCacheResonse(req, my_client_fd));
-    int num_sent =
-        send(client_fd, res_in_cache.getContent().c_str(), res_in_cache.getContent().length(), 0);
+    int num_sent = send(client_fd,
+                        res_in_cache.getContent().c_str(),
+                        res_in_cache.getContent().length(),
+                        0);
     if (num_sent == -1) {
       // Handle error
       return;
     }
+    // ID: Responding "RESPONSE"
+    std::cout << request_id << ": Responding \"" << res_in_cache.getStatus() << "\""
+              << std::endl;
     return;
   }
 
   // if not in cache
+  // ****************change it to log file later***********************//
+  std::cout << request_id << ": not in cache" << std::endl;
   const char * request_message = req.getContent().c_str();
   int client_len = send(my_client_fd, request_message, strlen(request_message), 0);
+  // ID: Requesting "REQUEST" from SERVER
+  std::cout << request_id << ": Requesting \"" << req.getFirstLine() << "\" from "
+            << req.getHost() << std::endl;
   // std::cout << "client_len" << client_len << std::endl;
   // std::cout << "GET request to remote server: " << request_message << std::endl;
 
-  const size_t buffer_size = 1024;
-  char buffer[buffer_size];
+  //const size_t buffer_size = BUFSIZ;
+  char buffer[BUFSIZ];
 
   int total_length = 0;
   string response_message;
   while (1) {
-    int server_len = recv(my_client_fd, buffer, buffer_size, 0);
-    // std::cout << "server_len each time: " << server_len << std::endl;
+    std::cout << "Enter the loop??????????" << std::endl;
+    int server_len = recv(my_client_fd, buffer, BUFSIZ, 0);
+    std::cout << "111111111111 server_len: " << server_len << std::endl;
     if (server_len == -1) {
       std::cerr << "Error" << endl;
       return;
     }
-    else if (server_len == 0) {
+    else if (server_len <= 0) {
       break;
     }
     else {
       // response_message.insert(response_message.end(), buffer, buffer + server_len);
+      std::cout << "222222222 server_len: " << server_len << std::endl;
       response_message.append(buffer, server_len);
     }
   }
+
+  Response res_return(response_message);
+
+  // ID: Received "RESPONSE" from	SERVER
+  std::cout << request_id << ": Received \"" << res_return.getStatus() << "\" from	"
+            << req.getHost() << std::endl;
 
   int num_sent = send(client_fd, response_message.c_str(), response_message.length(), 0);
   if (num_sent == -1) {
@@ -212,9 +229,14 @@ void Proxy::handleGET(Request req, int client_fd) {
     return;
   }
 
-  Response res_return(response_message);
+  // ID: Responding "RESPONSE"
+  std::cout << request_id << ": Responding \"" << res_return.getStatus() << "\""
+            << std::endl;
+
   // add it to cache
+  pthread_mutex_lock(&mutex);
   my_cache.addToCache(req, res_return);
+  pthread_mutex_unlock(&mutex);
 
   close(my_client_fd);
 }
@@ -227,8 +249,12 @@ void Proxy::handlePOST(Request req, int client_fd) {
   const char * request_message = req.getContent().c_str();
   int client_len = send(my_client_fd, request_message, strlen(request_message), 0);
 
+  // ID: Requesting "REQUEST" from SERVER
+  std::cout << req.getRequestID() << ": Requesting \"" << req.getFirstLine() << "\" from "
+            << req.getHost() << std::endl;
+
   const size_t buffer_size = 1024;
-  char buffer[buffer_size];
+  char buffer[buffer_size] = {0};
 
   int total_length = 0;
   string response_message;
@@ -246,28 +272,34 @@ void Proxy::handlePOST(Request req, int client_fd) {
     }
   }
 
+  Response res_return(response_message);
+  // ID: Received "RESPONSE" from	SERVER
+  std::cout << req.getRequestID() << ": Received \"" << res_return.getStatus()
+            << "\" from	" << req.getHost() << std::endl;
+
   int num_sent = send(client_fd, response_message.c_str(), response_message.length(), 0);
   if (num_sent == -1) {
     // Handle error
     return;
   }
 
+  // ID: Responding "RESPONSE"
+  std::cout << req.getRequestID() << ": Responding \"" << res_return.getStatus() << "\""
+            << std::endl;
+
   close(my_client_fd);
 }
 
 void Proxy::handleCONNECT(Request req, int client_fd) {
-  // cout << "handleConnect begin  HOST: " << req.getHost().c_str() << " "
-  //     << req.getPort().c_str() << endl;
-  // pthread_mutex_lock(&mutex);
   Client my_client(req.getHost().c_str(), req.getPort().c_str());
-  // Client my_client("www.google.com", "443");
-  // my_client.createClient();
   int my_client_fd = my_client.createConnection();
-  // pthread_mutex_unlock(&mutex);
-  // cout << "Connect to remote server successfully!" << endl;
 
   std::string response = "HTTP/1.1 200 OK\r\n\r\n";
   send(client_fd, response.c_str(), response.length(), 0);
+
+  // ID: Responding "RESPONSE"
+  std::cout << req.getRequestID() << ": Responding "
+            << "\"HTTP/1.1 200 OK\"" << std::endl;
 
   fd_set readfds;
   int maxfd = std::max(my_client_fd, client_fd);
@@ -292,6 +324,7 @@ void Proxy::handleCONNECT(Request req, int client_fd) {
         // error or end?
         return;
       }
+
       int len_send = send(my_client_fd, request_message, len_recv, 0);
       if (len_send <= 0) {
         // I think this is an error?

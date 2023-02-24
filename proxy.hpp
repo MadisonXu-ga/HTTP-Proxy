@@ -29,7 +29,7 @@ class Proxy {
   void makeDaemon();
   void run();
   static void * handleRequest(void * args);
-  static void handleGET(Request req, int fd);
+  static void handleGET(Request req, int fd, int request_id);
   static void handlePOST(Request req, int fd);
   static void handleCONNECT(Request req, int fd);
 };

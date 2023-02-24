@@ -28,7 +28,7 @@ class Cache {
  public:
   Cache(int capacity) : capacity(capacity){};
   void addToCache(Request req, Response res);
-  bool checkValidate(Response res);
+  bool checkValidate(Response res, int request_id);
   Response * getCacheResonse(Request req, int fd);
   bool isInCache(Request req);
 };

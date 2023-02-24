@@ -71,3 +71,6 @@ string Request::getURI() {
 string Request::getFirstLine() {
   return Fline;
 }
+int Request::getRequestID(){
+  return request_id;
+}
