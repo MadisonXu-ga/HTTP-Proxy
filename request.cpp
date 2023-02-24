@@ -28,6 +28,10 @@ void Request::parseHost() {
   host = temp.substr(0, comma);
   // cout << "host is:" << host << endl;
   if (method == "GET") {
+    if(temp.find(":") != string :: npos)
+    {
+      port = temp.substr(comma + 1, host_end - comma);
+    }
     port = "80";
   }
   else if (method == "CONNECT") {
@@ -52,7 +56,33 @@ void Request::parseFirstLine() {
   size_t end = request_content.find("\r\n");
   Fline = request_content.substr(0, end);
 }
-
+void Request::parseMaxStale()
+{
+  if(request_content.find("Cache-Control: ") != string :: npos)
+  {
+    size_t Cache_begin = request_content.find("Cache-Control: ");
+    size_t Cache_end = request_content.find("\r\n", Cache_begin);
+    string Cache_str = request_content.substr(Cache_begin, Cache_end - Cache_begin);
+    size_t Cache_str_end = Cache_str.find("\r\n");
+    //max_stale
+    size_t Maxstale_begin = Cache_str.find("max-stale=");
+    size_t Maxstale_end = Cache_str.find(",",Maxstale_begin);
+    if(Cache_str.find("max-stale=") != string :: npos)
+    {
+      size_t Maxstale_begin = Cache_str.find("max-stale=")
+      has_MaxStale = true;
+      if(Cache_str.find(",",Maxstale_begin) != string :: npos)
+      {
+        size_t Maxstale_end = Cache_str.find(",",Maxstale_begin);
+        max_stale = stoul(Cache_str.substr(Maxstale_begin, Maxstale_end - Maxstale_begin));
+      }
+      else
+      {
+        max_stale = stoul(Cache_str.substr(Maxstale_begin, Cache_str_end - Maxstale_begin));
+      }
+    }
+  }
+}
 string Request::getContent() {
   return request_content;
 }
@@ -73,4 +103,8 @@ string Request::getFirstLine() {
 }
 int Request::getRequestID(){
   return request_id;
+}
+size_t Request::getMaxStale()
+{
+  return max_stale;
 }

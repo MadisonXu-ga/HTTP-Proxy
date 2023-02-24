@@ -58,6 +58,9 @@ bool Cache::checkValidate(Response res, int request_id) {
   }
   // according to max-age (+ max-stale)
   else {
+    if(req){
+      ss
+    }
     expires_time = response_receive_time + res.getMaxage() + res.getMaxstale();
   }
   if (expires_time < now) {

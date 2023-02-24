@@ -1,5 +1,7 @@
 #include "proxy.hpp"
 
+#include <fcntl.h>
+
 #include <fstream>
 #include <vector>
 
@@ -186,7 +188,13 @@ void Proxy::handleGET(Request req, int client_fd, int request_id) {
   // if not in cache
   // ****************change it to log file later***********************//
   std::cout << request_id << ": not in cache" << std::endl;
-  const char * request_message = req.getContent().c_str();
+
+  // try \0
+  // const char * request_message = req.getContent().c_str();
+  char request_message[req.getContent().length() + 1];
+  strcpy(request_message, req.getContent().c_str());
+  request_message[req.getContent().length()] = '\0';
+
   int client_len = send(my_client_fd, request_message, strlen(request_message), 0);
   // ID: Requesting "REQUEST" from SERVER
   std::cout << request_id << ": Requesting \"" << req.getFirstLine() << "\" from "
@@ -200,10 +208,10 @@ void Proxy::handleGET(Request req, int client_fd, int request_id) {
   int total_length = 0;
   string response_message;
   while (1) {
-    std::cout << "Enter the loop??????????" << std::endl;
+    std::cout << request_id << ": Enter the loop??????????" << std::endl;
     int server_len = recv(my_client_fd, buffer, BUFSIZ, 0);
-    std::cout << "111111111111 server_len: " << server_len << std::endl;
-    if (server_len == -1) {
+    std::cout << request_id << ": 111111111111 server_len: " << server_len << std::endl;
+    if (server_len < 0) {
       std::cerr << "Error" << endl;
       return;
     }
@@ -212,7 +220,7 @@ void Proxy::handleGET(Request req, int client_fd, int request_id) {
     }
     else {
       // response_message.insert(response_message.end(), buffer, buffer + server_len);
-      std::cout << "222222222 server_len: " << server_len << std::endl;
+      std::cout << request_id << ": 222222222 server_len: " << server_len << std::endl;
       response_message.append(buffer, server_len);
     }
   }
