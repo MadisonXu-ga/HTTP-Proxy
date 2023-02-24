@@ -38,6 +38,21 @@ void Request::parseHost() {
   }
 }
 
+void Request::parseURI() {
+  if (request_content.find(" ") != string::npos) {
+    size_t URI_begin = request_content.find(" ");
+    URI_begin += 1;
+    size_t URI_end = request_content.find(" ", URI_begin);
+
+    URI = request_content.substr(URI_begin, URI_end - URI_begin);
+  }
+}
+
+void Request::parseFirstLine() {
+  size_t end = request_content.find("\r\n");
+  Fline = request_content.substr(0, end);
+}
+
 string Request::getContent() {
   return request_content;
 }
@@ -49,4 +64,10 @@ string Request::getHost() {
 }
 string Request::getPort() {
   return port;
+}
+string Request::getURI() {
+  return URI;
+}
+string Request::getFirstLine() {
+  return Fline;
 }

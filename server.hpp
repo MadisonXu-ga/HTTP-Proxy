@@ -8,8 +8,9 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include <iostream>
 #include <cstring>
+#include <iostream>
+#include <string>
 
 class Server {
   const char * hostname;
@@ -30,6 +31,6 @@ class Server {
   void init_addrinfo();
   void createSocket();
   void listenToSocket();
-  int acceptConnection();
+  std::pair<int, std::string> acceptConnection();
 };
-#endif // SERVER_HPP
+#endif  // SERVER_HPP

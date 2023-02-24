@@ -1,3 +1,6 @@
+#ifndef CLIENT_HPP
+#define CLIENT_HPP
+
 #include <netdb.h>
 #include <signal.h>
 #include <sys/socket.h>
@@ -19,8 +22,6 @@ class Client {
  public:
   Client() : hostname(NULL), port(NULL) {}
   Client(const char * hostname, const char * port) : hostname(hostname), port(port) {
-    std::cout << "Client input hostname: " << hostname << std::endl;
-    std::cout << "Client's hostname: " << this->hostname << std::endl;
     createClient();
   }
   ~Client() {
@@ -33,3 +34,5 @@ class Client {
   void createSocket();
   int createConnection();
 };
+
+#endif

@@ -6,9 +6,6 @@ void Client::init_addrinfo() {
   host_info.ai_family = AF_UNSPEC;
   host_info.ai_socktype = SOCK_STREAM;
 
-  std::cout << "Client::init_addrinfo hostname: " << hostname << std::endl;
-  std::cout << "Client::init_addrinfo port: " << port << std::endl;
-
   int status = getaddrinfo(this->hostname, this->port, &host_info, &host_info_list);
   if (status != 0) {
     std::cerr << "Error: cannot get address info for host" << std::endl;

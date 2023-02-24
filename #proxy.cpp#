@@ -1,5 +1,6 @@
 #include "proxy.hpp"
 
+#include 
 #include <fstream>
 #include <vector>
 
@@ -85,7 +86,7 @@ void Proxy::run() {
 }
 
 void * Proxy::handleRequest(void * args) {
-  // std::cout << "handle request begin" << std::endl;
+  std::cout << "handle request begin" << std::endl;
 
   // get client info
   ClientInfo * client_info = static_cast<ClientInfo *>(args);
@@ -96,8 +97,8 @@ void * Proxy::handleRequest(void * args) {
   // receive a request from a client
   vector<char> request_message(1024 * 1024);
   int len = recv(client_fd, &request_message.data()[0], 1000 * 1000, 0);
-  // std::cout << "len: " << len << std::endl;
-  // std::cout << "sizeof(request_message): " << sizeof(request_message) << std::endl;
+  std::cout << "len: " << len << std::endl;
+  std::cout << "sizeof(request_message): " << sizeof(request_message) << std::endl;
   // makestd::cout << "Let me see see: " << request_message << std::endl;
   if (len <= 0) {
     //error to logfile, now I just print to std::cout
@@ -108,7 +109,7 @@ void * Proxy::handleRequest(void * args) {
   // covert request to string
   string request_str(request_message.begin(), request_message.end());
 
-  // std::cout << "et me see see: request_str: " << request_str << std::endl;
+  std::cout << "et me see see: request_str: " << request_str << std::endl;
 
   // make a Request object
   Request req(request_str);
@@ -125,14 +126,15 @@ void * Proxy::handleRequest(void * args) {
   std::time_t now = std::time(nullptr);
   std::tm * utc = std::gmtime(&now);
   std::cout << request_id << ": " << req.getFirstLine() << " from " << client_ip << " @ "
-            << std::asctime(utc);
+            << std::asctime(utc) << std::endl;
 
   if (req.getMethod() == "GET") {
     handleGET(req, client_fd);
-    // return NULL;
+    return NULL;
   }
   else if (req.getMethod() == "POST") {
-    handlePOST(req, client_fd);
+    // handlePOST(req, client_fd);
+    // handleCONNECT(req, client_fd);
     return NULL;
   }
   else if (req.getMethod() == "CONNECT") {
@@ -147,10 +149,10 @@ void * Proxy::handleRequest(void * args) {
   }
   else {
     // error print to logfile
-    // return NULL;
+    return NULL;
   }
 
-  // std::cout << "handle request end" << std::endl;
+  std::cout << "handle request end" << std::endl;
   close(client_fd);
 
   return NULL;
@@ -164,26 +166,16 @@ void Proxy::handleGET(Request req, int client_fd) {
 
   // connect to the remote server
   int my_client_fd = my_client.createConnection();
-  // cout << "Connect to remote server successfully!" << endl;
+  cout << "Connect to remote server successfully!" << endl;
 
   // if in cache
-  if (my_cache.isInCache(req)) {
-    // response
-    Response res_in_cache = *(my_cache.getCacheResonse(req, my_client_fd));
-    int num_sent =
-        send(client_fd, res_in_cache.getContent().c_str(), res_in_cache.getContent().length(), 0);
-    if (num_sent == -1) {
-      // Handle error
-      return;
-    }
-    return;
-  }
+  if(my_cache)
 
   // if not in cache
   const char * request_message = req.getContent().c_str();
   int client_len = send(my_client_fd, request_message, strlen(request_message), 0);
-  // std::cout << "client_len" << client_len << std::endl;
-  // std::cout << "GET request to remote server: " << request_message << std::endl;
+  std::cout << "client_len" << client_len << std::endl;
+  std::cout << "GET request to remote server: " << request_message << std::endl;
 
   const size_t buffer_size = 1024;
   char buffer[buffer_size];
@@ -192,7 +184,7 @@ void Proxy::handleGET(Request req, int client_fd) {
   string response_message;
   while (1) {
     int server_len = recv(my_client_fd, buffer, buffer_size, 0);
-    // std::cout << "server_len each time: " << server_len << std::endl;
+    std::cout << "server_len each time: " << server_len << std::endl;
     if (server_len == -1) {
       std::cerr << "Error" << endl;
       return;
@@ -211,60 +203,44 @@ void Proxy::handleGET(Request req, int client_fd) {
     // Handle error
     return;
   }
+  // const char * response_message_ptr = response_message.data();
+  // size_t response_size = response_message.size();
+  // int num_sent = send(client_fd, response_message_ptr, response_size, 0);
+  // if (num_sent == -1) {
+  //   // Handle error
+  //   return;
+  // }
 
-  Response res_return(response_message);
-  // add it to cache
-  my_cache.addToCache(req, res_return);
+  // response_message[total_length] = '\0';
 
+  // int server_len = recv(my_client_fd, &response_message, 65536, 0);
+  // std::cout << "server_len" << server_len << std::endl;
+  // std::cout << "GET receive: " << response_message << std::endl;
+  // if (server_len <= 0) {
+  //   return;
+  // }
+
+  // send resond to client
+  // int send_len = send(client_fd, response_message.data(), total_length, 0);
+  // std::cout << "send_len" << send_len << std::endl;
+  // std::cout << "client GET receive: "
+  //           << string(response_message.begin(), response_message.end()) << std::endl;
   close(my_client_fd);
 }
 
-void Proxy::handlePOST(Request req, int client_fd) {
-  Client my_client(req.getHost().c_str(), req.getPort().c_str());
-  // connect to the remote server
-  int my_client_fd = my_client.createConnection();
-
-  const char * request_message = req.getContent().c_str();
-  int client_len = send(my_client_fd, request_message, strlen(request_message), 0);
-
-  const size_t buffer_size = 1024;
-  char buffer[buffer_size];
-
-  int total_length = 0;
-  string response_message;
-  while (1) {
-    int server_len = recv(my_client_fd, buffer, buffer_size, 0);
-    if (server_len == -1) {
-      std::cerr << "Error" << endl;
-      return;
-    }
-    else if (server_len == 0) {
-      break;
-    }
-    else {
-      response_message.append(buffer, server_len);
-    }
-  }
-
-  int num_sent = send(client_fd, response_message.c_str(), response_message.length(), 0);
-  if (num_sent == -1) {
-    // Handle error
-    return;
-  }
-
-  close(my_client_fd);
+void Proxy::handlePOST() {
 }
 
 void Proxy::handleCONNECT(Request req, int client_fd) {
-  // cout << "handleConnect begin  HOST: " << req.getHost().c_str() << " "
-  //     << req.getPort().c_str() << endl;
+  cout << "handleConnect begin  HOST: " << req.getHost().c_str() << " "
+       << req.getPort().c_str() << endl;
   // pthread_mutex_lock(&mutex);
   Client my_client(req.getHost().c_str(), req.getPort().c_str());
   // Client my_client("www.google.com", "443");
   // my_client.createClient();
   int my_client_fd = my_client.createConnection();
   // pthread_mutex_unlock(&mutex);
-  // cout << "Connect to remote server successfully!" << endl;
+  cout << "Connect to remote server successfully!" << endl;
 
   std::string response = "HTTP/1.1 200 OK\r\n\r\n";
   send(client_fd, response.c_str(), response.length(), 0);
@@ -286,7 +262,7 @@ void Proxy::handleCONNECT(Request req, int client_fd) {
     if (FD_ISSET(client_fd, &readfds)) {
       char request_message[65536] = {0};
       int len_recv = recv(client_fd, request_message, sizeof(request_message), 0);
-      // cout << "Receive length: " << len_recv << endl;
+      cout << "Receive length: " << len_recv << endl;
       // std::cout << "Receive from client: " << request_message << std::endl;
       if (len_recv <= 0) {
         // error or end?
@@ -302,8 +278,8 @@ void Proxy::handleCONNECT(Request req, int client_fd) {
     if (FD_ISSET(my_client_fd, &readfds)) {
       char response_message[65536] = {0};
       int len_recv = recv(my_client_fd, response_message, sizeof(response_message), 0);
-      // cout << "Receive length: " << len_recv << endl;
-      // std::cout << "Receive from remote server: " << response_message << std::endl;
+      cout << "Receive length: " << len_recv << endl;
+      std::cout << "Receive from remote server: " << response_message << std::endl;
       if (len_recv <= 0) {
         // error or end?
         return;

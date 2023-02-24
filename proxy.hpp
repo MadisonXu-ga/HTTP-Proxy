@@ -1,3 +1,6 @@
+#ifndef PROXY_HPP
+#define PROXY_HPP
+
 #include <netdb.h>
 #include <signal.h>
 #include <sys/socket.h>
@@ -8,8 +11,11 @@
 #include <iostream>
 #include <string>
 
+#include "cache.hpp"
 #include "client.hpp"
+#include "client_info.hpp"
 #include "request.hpp"
+#include "response.hpp"
 #include "server.hpp"
 
 class Proxy {
@@ -22,8 +28,10 @@ class Proxy {
 
   void makeDaemon();
   void run();
-  static void * handleRequest(void * fd);
+  static void * handleRequest(void * args);
   static void handleGET(Request req, int fd);
-  static void handlePOST();
+  static void handlePOST(Request req, int fd);
   static void handleCONNECT(Request req, int fd);
 };
+
+#endif

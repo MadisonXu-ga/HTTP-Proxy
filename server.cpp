@@ -55,7 +55,7 @@ void Server::listenToSocket() {
   }
 }
 
-int Server::acceptConnection() {
+std::pair<int, std::string> Server::acceptConnection() {
   struct sockaddr_storage socket_addr;
   socklen_t socket_addr_len = sizeof(socket_addr);
 
@@ -65,8 +65,30 @@ int Server::acceptConnection() {
     exit(-1);
   }
 
-  return connect_fd;
+  // get ip
+  char ip[NI_MAXHOST];
+  int status = getnameinfo(
+      (struct sockaddr *)&socket_addr, socket_addr_len, ip, NI_MAXHOST, NULL, 0, 0);
+  if (status != 0) {
+    std::cerr << "Error: getnameinfo error" << std::endl;
+    exit(-1);
+  }
+
+  std::string client_ip(ip);
+
+  std::pair<int, std::string> result = std::make_pair(connect_fd, client_ip);
+  return result;
 }
+
+// std::string Server::getClientIP() {
+//   char ip[NI_MAXHOST];
+//   int status = getnameinfo(
+//       (struct sockaddr *)&socket_addr, socket_addr_len, ips[i], NI_MAXHOST, NULL, 0, 0);
+//   if (status != 0) {
+//     cerr << "Error: getnameinfo error" << endl;
+//     exit(-1);
+//   }
+// }
 
 //   void get_port() {
 //     struct sockaddr_in addr;
