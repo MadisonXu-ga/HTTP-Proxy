@@ -69,7 +69,7 @@ void Request::parseMaxStale()
     size_t Maxstale_end = Cache_str.find(",",Maxstale_begin);
     if(Cache_str.find("max-stale=") != string :: npos)
     {
-      size_t Maxstale_begin = Cache_str.find("max-stale=")
+      size_t Maxstale_begin = Cache_str.find("max-stale=");
       has_MaxStale = true;
       if(Cache_str.find(",",Maxstale_begin) != string :: npos)
       {

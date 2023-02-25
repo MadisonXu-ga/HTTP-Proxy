@@ -64,7 +64,6 @@ void Proxy::run() {
   // need assign unique id to each request.
   int request_id = -1;
   while (true) {
-    // std::cout << "??" << std::endl;
     std::pair<int, std::string> result = proxy_server.acceptConnection();
     int client_fd = result.first;
     std::string client_ip = result.second;
@@ -81,13 +80,10 @@ void Proxy::run() {
 
     pthread_t thread;
     pthread_create(&thread, NULL, handleRequest, &client_info);
-    // handleRequest(&client_fd);
   }
 }
 
 void * Proxy::handleRequest(void * args) {
-  // std::cout << "handle request begin" << std::endl;
-
   // get client info
   ClientInfo * client_info = static_cast<ClientInfo *>(args);
   int client_fd = client_info->client_fd;
@@ -97,29 +93,18 @@ void * Proxy::handleRequest(void * args) {
   // receive a request from a client
   vector<char> request_message(1024 * 1024);
   int len = recv(client_fd, &request_message.data()[0], 1000 * 1000, 0);
-  // std::cout << "len: " << len << std::endl;
-  // std::cout << "sizeof(request_message): " << sizeof(request_message) << std::endl;
-  // makestd::cout << "Let me see see: " << request_message << std::endl;
   if (len <= 0) {
     //error to logfile, now I just print to std::cout
+    // Send400Error(client_fd);
+    close(client_fd);
     return NULL;
   }
-  request_message.data()[len] = '\0';
 
+  request_message.data()[len] = '\0';
   // covert request to string
   string request_str(request_message.begin(), request_message.end());
-
-  // std::cout << "et me see see: request_str: " << request_str << std::endl;
-
   // make a Request object
   Request req(request_str, request_id);
-  // Request initial_request(request_str);
-  // std::cout << "Request content is:" << initial_request.request_content << endl;
-  // initial_request.parseMethod();
-
-  // std::cout << "Method is:" << req.getMethod() << endl;
-  // std::cout << "Host is:" << req.getHost() << endl;
-  // std::cout << "Port is:" << req.getPort() << endl;
 
   // ID: "REQUEST" from IPFROM @ TIME
   // ****************change it to log file later***********************//
@@ -130,14 +115,11 @@ void * Proxy::handleRequest(void * args) {
 
   if (req.getMethod() == "GET") {
     handleGET(req, client_fd, request_id);
-    // return NULL;
   }
   else if (req.getMethod() == "POST") {
     handlePOST(req, client_fd);
-    // return NULL;
   }
   else if (req.getMethod() == "CONNECT") {
-    // ??? do i need to output here?
     // ID: Requesting "REQUEST" from SERVER
     // ****************change it to log file later***********************//
     std::cout << request_id << ": Requesting \"" << req.getFirstLine() << "\" from "
@@ -148,24 +130,21 @@ void * Proxy::handleRequest(void * args) {
   }
   else {
     // error print to logfile
-    // return NULL;
+    Send400Error(client_fd);
   }
 
+  // close the socket and the thread
   close(client_fd);
-
   pthread_exit(NULL);
+
   return NULL;
 }
 
 void Proxy::handleGET(Request req, int client_fd, int request_id) {
   // Need to consider cache
-  // cout << "handleGet begin  HOST: " << req.getHost().c_str() << " "
-  //      << req.getPort().c_str() << endl;
   Client my_client(req.getHost().c_str(), req.getPort().c_str());
-
   // connect to the remote server
   int my_client_fd = my_client.createConnection();
-  // cout << "Connect to remote server successfully!" << endl;
 
   // if in cache
   if (my_cache.isInCache(req)) {
@@ -176,12 +155,14 @@ void Proxy::handleGET(Request req, int client_fd, int request_id) {
                         res_in_cache.getContent().length(),
                         0);
     if (num_sent == -1) {
-      // Handle error
+      std::cerr << "Error: sending response to client failed" << std::endl;
       return;
     }
     // ID: Responding "RESPONSE"
     std::cout << request_id << ": Responding \"" << res_in_cache.getStatus() << "\""
               << std::endl;
+
+    close(my_client_fd);
     return;
   }
 
@@ -199,41 +180,62 @@ void Proxy::handleGET(Request req, int client_fd, int request_id) {
   // ID: Requesting "REQUEST" from SERVER
   std::cout << request_id << ": Requesting \"" << req.getFirstLine() << "\" from "
             << req.getHost() << std::endl;
-  // std::cout << "client_len" << client_len << std::endl;
-  // std::cout << "GET request to remote server: " << request_message << std::endl;
 
-  //const size_t buffer_size = BUFSIZ;
+  // const size_t first_buffer_size = BUFSIZ;
+  char first_buffer[1024];
+
+  // receive first response, contains head and part of body
+  int server_len = recv(my_client_fd, first_buffer, 1024, 0);
+  if (server_len == -1) {
+    Send502Error(client_fd);
+    close(my_client_fd);
+    return;
+  }
+
+  std::string first_response_message;
+  first_response_message.append(first_buffer, server_len);
+  // std::cout << "first_response_message: " << first_response_message << std::endl;
+
+  Response first_res(first_response_message);
+
+  const size_t buffer_size = BUFSIZ;
   char buffer[BUFSIZ];
 
   int total_length = 0;
-  string response_message;
-  while (1) {
-    std::cout << request_id << ": Enter the loop??????????" << std::endl;
+  std::string response_message;
+  bool response_complete = false;
+  while (!response_complete) {
     int server_len = recv(my_client_fd, buffer, BUFSIZ, 0);
-    std::cout << request_id << ": 111111111111 server_len: " << server_len << std::endl;
     if (server_len < 0) {
-      std::cerr << "Error" << endl;
+      Send502Error(client_fd);
+      close(my_client_fd);
       return;
     }
-    else if (server_len <= 0) {
+    else if (server_len == 0) {
+      response_complete = true;
       break;
     }
     else {
-      // response_message.insert(response_message.end(), buffer, buffer + server_len);
-      std::cout << request_id << ": 222222222 server_len: " << server_len << std::endl;
-      response_message.append(buffer, server_len);
+      first_response_message.append(buffer, server_len);
+    }
+    // Check if the last chunk has been received
+    if (first_response_message.find("\r\n0\r\n") != std::string::npos) {
+      response_complete = true;
     }
   }
 
-  Response res_return(response_message);
+  // Response res_return(response_str);
+  Response res_return(first_response_message);
 
   // ID: Received "RESPONSE" from	SERVER
   std::cout << request_id << ": Received \"" << res_return.getStatus() << "\" from	"
             << req.getHost() << std::endl;
 
-  int num_sent = send(client_fd, response_message.c_str(), response_message.length(), 0);
+  int num_sent =
+      send(client_fd, first_response_message.c_str(), first_response_message.length(), 0);
   if (num_sent == -1) {
-    // Handle error
+    std::cerr << "Error: sending response to client failed" << std::endl;
+    close(my_client_fd);
     return;
   }
 
@@ -241,10 +243,17 @@ void Proxy::handleGET(Request req, int client_fd, int request_id) {
   std::cout << request_id << ": Responding \"" << res_return.getStatus() << "\""
             << std::endl;
 
-  // add it to cache
-  pthread_mutex_lock(&mutex);
-  my_cache.addToCache(req, res_return);
-  pthread_mutex_unlock(&mutex);
+  // if response is not chunked, add it to the cache
+  if (!res_return.chunked) {
+    pthread_mutex_lock(&mutex);
+    my_cache.addToCache(req, res_return);
+    pthread_mutex_unlock(&mutex);
+  }
+  else {
+    // ID: not cacheable because chunked
+    std::cout << request_id << ": not cacheable because "
+              << "response is chunked" << std::endl;
+  }
 
   close(my_client_fd);
 }
@@ -254,46 +263,91 @@ void Proxy::handlePOST(Request req, int client_fd) {
   // connect to the remote server
   int my_client_fd = my_client.createConnection();
 
-  const char * request_message = req.getContent().c_str();
-  int client_len = send(my_client_fd, request_message, strlen(request_message), 0);
+  std::cout << req.getRequestID() << ": not in cache" << std::endl;
 
+  // try \0
+  // const char * request_message = req.getContent().c_str();
+  char request_message[req.getContent().length() + 1];
+  strcpy(request_message, req.getContent().c_str());
+  request_message[req.getContent().length()] = '\0';
+
+  int client_len = send(my_client_fd, request_message, strlen(request_message), 0);
   // ID: Requesting "REQUEST" from SERVER
   std::cout << req.getRequestID() << ": Requesting \"" << req.getFirstLine() << "\" from "
             << req.getHost() << std::endl;
 
-  const size_t buffer_size = 1024;
-  char buffer[buffer_size] = {0};
+  // const size_t first_buffer_size = BUFSIZ;
+  char first_buffer[1024];
+
+  // receive first response, contains head and part of body
+  int server_len = recv(my_client_fd, first_buffer, 1024, 0);
+  if (server_len == -1) {
+    Send502Error(client_fd);
+    close(my_client_fd);
+    return;
+  }
+
+  std::string first_response_message;
+  first_response_message.append(first_buffer, server_len);
+
+  Response first_res(first_response_message);
+
+  const size_t buffer_size = BUFSIZ;
+  char buffer[BUFSIZ];
 
   int total_length = 0;
-  string response_message;
-  while (1) {
-    int server_len = recv(my_client_fd, buffer, buffer_size, 0);
-    if (server_len == -1) {
-      std::cerr << "Error" << endl;
+  std::string response_message;
+  bool response_complete = false;
+  while (!response_complete) {
+    int server_len = recv(my_client_fd, buffer, BUFSIZ, 0);
+    if (server_len < 0) {
+      Send502Error(client_fd);
+      close(my_client_fd);
       return;
     }
     else if (server_len == 0) {
+      response_complete = true;
       break;
     }
     else {
-      response_message.append(buffer, server_len);
+      first_response_message.append(buffer, server_len);
+    }
+    // Check if the last chunk has been received
+    if (first_response_message.find("\r\n0\r\n") != std::string::npos) {
+      response_complete = true;
     }
   }
 
-  Response res_return(response_message);
+  // Response res_return(response_str);
+  Response res_return(first_response_message);
+
   // ID: Received "RESPONSE" from	SERVER
   std::cout << req.getRequestID() << ": Received \"" << res_return.getStatus()
             << "\" from	" << req.getHost() << std::endl;
 
-  int num_sent = send(client_fd, response_message.c_str(), response_message.length(), 0);
+  int num_sent =
+      send(client_fd, first_response_message.c_str(), first_response_message.length(), 0);
   if (num_sent == -1) {
-    // Handle error
+    std::cerr << "Error: sending response to client failed" << std::endl;
+    close(my_client_fd);
     return;
   }
 
   // ID: Responding "RESPONSE"
   std::cout << req.getRequestID() << ": Responding \"" << res_return.getStatus() << "\""
             << std::endl;
+
+  // if response is not chunked, add it to the cache
+  if (!res_return.chunked) {
+    pthread_mutex_lock(&mutex);
+    my_cache.addToCache(req, res_return);
+    pthread_mutex_unlock(&mutex);
+  }
+  else {
+    // ID: not cacheable because REASON
+    std::cout << req.getRequestID() << ": not cacheable because "
+              << "response is chunked" << std::endl;
+  }
 
   close(my_client_fd);
 }
@@ -319,23 +373,20 @@ void Proxy::handleCONNECT(Request req, int client_fd) {
 
     int status = select(maxfd + 1, &readfds, NULL, NULL, NULL);
     if (status == -1) {
-      // error
-      exit(EXIT_FAILURE);
+      std::cerr << "Error: select failed!" << std::endl;
+      return;
     }
 
     if (FD_ISSET(client_fd, &readfds)) {
       char request_message[65536] = {0};
       int len_recv = recv(client_fd, request_message, sizeof(request_message), 0);
-      // cout << "Receive length: " << len_recv << endl;
-      // std::cout << "Receive from client: " << request_message << std::endl;
       if (len_recv <= 0) {
-        // error or end?
         return;
       }
 
       int len_send = send(my_client_fd, request_message, len_recv, 0);
       if (len_send <= 0) {
-        // I think this is an error?
+        std::cerr << "Error: forwarding response to client failed" << std::endl;
         return;
       }
     }
@@ -343,17 +394,30 @@ void Proxy::handleCONNECT(Request req, int client_fd) {
     if (FD_ISSET(my_client_fd, &readfds)) {
       char response_message[65536] = {0};
       int len_recv = recv(my_client_fd, response_message, sizeof(response_message), 0);
-      // cout << "Receive length: " << len_recv << endl;
-      // std::cout << "Receive from remote server: " << response_message << std::endl;
       if (len_recv <= 0) {
-        // error or end?
         return;
       }
       int len_send = send(client_fd, response_message, len_recv, 0);
       if (len_send <= 0) {
-        // I think this is an error?
+        std::cerr << "Error: forwarding response to client failed" << std::endl;
         return;
       }
     }
+  }
+}
+
+void Proxy::Send502Error(int client_fd) {
+  string response = "HTTP/1.1 502 Bad Gateway\r\n\r\n";
+  if (send(client_fd, response.c_str(), response.size(), 0) == -1) {
+    std::cerr << "Send 502 failed!" << std::endl;
+    exit(EXIT_FAILURE);
+  }
+}
+
+void Proxy::Send400Error(int client_fd) {
+  string response = "HTTP/1.1 400 Bad Request\r\n\r\n";
+  if (send(client_fd, response.c_str(), response.size(), 0) == -1) {
+    std::cerr << "Send 400 failed!" << std::endl;
+    exit(EXIT_FAILURE);
   }
 }

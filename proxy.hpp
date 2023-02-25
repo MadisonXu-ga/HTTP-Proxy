@@ -32,6 +32,8 @@ class Proxy {
   static void handleGET(Request req, int fd, int request_id);
   static void handlePOST(Request req, int fd);
   static void handleCONNECT(Request req, int fd);
+  static void Send502Error(int fd);
+  static void Send400Error(int fd);
 };
 
 #endif

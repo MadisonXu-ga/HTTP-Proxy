@@ -16,6 +16,7 @@ class Response {
   string etag = "";
   string last_modify = "";
   string code = "";
+  size_t head_length = 0;
   size_t content_length = 0;
   size_t max_age = 0;
   size_t max_stale = 0;
@@ -36,6 +37,8 @@ class Response {
     parseLastModify();
     parseContent_len();
     parseCache_control();
+    parsehead_len();
+    parseChunked();
   }
   void parseStatus();
   void parseEtag();
@@ -45,6 +48,7 @@ class Response {
   void parseContent_len();
   void parseCache_control();
   void parseChunked();
+  void parsehead_len();
   string getDate();
   string getExpires();
   string getContent();
@@ -55,6 +59,7 @@ class Response {
   size_t getMaxage();
   size_t getMaxstale();
   size_t getContentlen();
+  size_t getHeadLen();
 };
 
 #endif

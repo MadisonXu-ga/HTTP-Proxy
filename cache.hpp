@@ -11,11 +11,11 @@
 #include <chrono>
 #include <ctime>
 #include <iomanip>
+#include <queue>
 #include <sstream>
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include <queue>
 
 #include "request.hpp"
 #include "response.hpp"
@@ -28,7 +28,7 @@ class Cache {
  public:
   Cache(int capacity) : capacity(capacity){};
   void addToCache(Request req, Response res);
-  bool checkValidate(Response res, int request_id);
+  bool checkValidate(Request req, Response res, int request_id);
   Response * getCacheResonse(Request req, int fd);
   bool isInCache(Request req);
 };
