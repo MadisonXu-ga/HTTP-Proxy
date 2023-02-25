@@ -76,6 +76,7 @@ void Response::parseCache_control() {
     if (Cache_str.find("max-age=") != string ::npos) {
       size_t Maxage_begin = Cache_str.find("max-age=");
       has_Maxage = true;
+      Maxage_begin += 8;
       if (Cache_str.find(",", Maxage_begin) != string ::npos) {
         size_t Maxage_end = Cache_str.find(",", Maxage_begin);
         max_age = stoul(Cache_str.substr(Maxage_begin, Maxage_end - Maxage_begin));

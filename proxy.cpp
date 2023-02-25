@@ -337,18 +337,6 @@ void Proxy::handlePOST(Request req, int client_fd) {
   std::cout << req.getRequestID() << ": Responding \"" << res_return.getStatus() << "\""
             << std::endl;
 
-  // if response is not chunked, add it to the cache
-  if (!res_return.chunked) {
-    pthread_mutex_lock(&mutex);
-    my_cache.addToCache(req, res_return);
-    pthread_mutex_unlock(&mutex);
-  }
-  else {
-    // ID: not cacheable because REASON
-    std::cout << req.getRequestID() << ": not cacheable because "
-              << "response is chunked" << std::endl;
-  }
-
   close(my_client_fd);
 }
 
