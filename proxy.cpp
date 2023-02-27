@@ -5,61 +5,82 @@
 #include <fstream>
 #include <vector>
 
-std::ofstream proxy_log("/var/log/erss/proxy.log");
+std::ofstream proxy_log("./proxy.log");
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-Cache my_cache(100);
+Cache my_cache(100, proxy_log);
 
 void Proxy::makeDaemon() {
-  // pid_t pid = fork();
-  // if (pid < 0) {
-  //   cerr << "Error: fork() failed" << std::endl;
-  //   exit(EXIT_FAILURE);
-  // }
-  // if (pid > 0) {
-  //   // Exit the parent process
-  //   exit(EXIT_SUCCESS);
-  // }
-  // std::cout << pid << std::endl;
+  pid_t pid = fork();
+  if (pid < 0) {
+    pthread_mutex_lock(&mutex);
+    proxy_log << "(no-id): ERROR fork() failed" << std::endl;
+    pthread_mutex_unlock(&mutex);
+    exit(EXIT_FAILURE);
+  }
+  if (pid > 0) {
+    // Exit the parent process
+    exit(EXIT_SUCCESS);
+  }
+  // create a new session and become the session leader
+  if (setsid() < 0) {
+    pthread_mutex_lock(&mutex);
+    proxy_log << "(no-id): ERROR setsid() failed" << std::endl;
+    pthread_mutex_unlock(&mutex);
+    exit(EXIT_FAILURE);
+  }
 
-  // // create a new session and become the session leader
-  // if (setsid() < 0) {
-  //   cerr << "Error: setsid() failed" << std::endl;
-  //   exit(EXIT_FAILURE);
-  // }
+  // Change current working directory to the root directory
+  if (chdir("/") < 0) {
+    pthread_mutex_lock(&mutex);
+    proxy_log << "(no-id): ERROR chdir() failed" << std::endl;
+    pthread_mutex_unlock(&mutex);
+    exit(EXIT_FAILURE);
+  }
 
-  // // Close stdin/stderr/stdout, open them to /dev/null
-  // // freopen("/dev/null", "r", stdin);
-  // // freopen("/dev/null", "w", stdout);
-  // // freopen("/dev/null", "w", stderr);
+  // Close standard file descriptors and reopen them as /dev/null
+  close(STDIN_FILENO);
+  close(STDOUT_FILENO);
+  close(STDERR_FILENO);
+  open("/dev/null", O_RDONLY);
+  open("/dev/null", O_WRONLY);
+  open("/dev/null", O_RDWR);
 
-  // // std::cout << "4" << std::endl;
-  // // Change current working directory to the root directory
-  // if (chdir("/") < 0) {
-  //   cerr << "Error: chdir() failed" << std::endl;
-  //   exit(EXIT_FAILURE);
-  // }
+  // Clear umask
+  umask(0);
 
-  // // std::cout << "5" << std::endl;
-  // // Clear umask
-  // umask(0);
-
-  // // Fork again and exit parent
-  // pid = fork();
-  // if (pid < 0) {
-  //   perror("fork");
-  //   exit(EXIT_FAILURE);
-  // }
-  // if (pid > 0) {
-  //   exit(EXIT_SUCCESS);
-  // }
+  // start the proxy server
   run();
 }
 
 void Proxy::run() {
   Server proxy_server(port);
-  proxy_server.createServer();
+  int status = proxy_server.createServer();
+  if (status == -1) {
+    pthread_mutex_lock(&mutex);
+    proxy_log << "(no-id): ERROR Cannot get address info for host" << std::endl;
+    pthread_mutex_unlock(&mutex);
+    return;
+  }
+  else if (status == -2) {
+    pthread_mutex_lock(&mutex);
+    proxy_log << "(no-id): ERROR Cannot create socket" << std::endl;
+    pthread_mutex_unlock(&mutex);
+    return;
+  }
+  else if (status == -3) {
+    pthread_mutex_lock(&mutex);
+    proxy_log << "(no-id): ERROR Cannot bind socket" << std::endl;
+    pthread_mutex_unlock(&mutex);
+    return;
+  }
+  else if (status == -4) {
+    pthread_mutex_lock(&mutex);
+    proxy_log << "(no-id): ERROR Cannot listen on socket" << std::endl;
+    pthread_mutex_unlock(&mutex);
+    return;
+  }
 
   // need assign unique id to each request.
   int request_id = -1;
@@ -67,6 +88,19 @@ void Proxy::run() {
     std::pair<int, std::string> result = proxy_server.acceptConnection();
     int client_fd = result.first;
     std::string client_ip = result.second;
+
+    if (client_fd == -1) {
+      pthread_mutex_lock(&mutex);
+      proxy_log << "(no-id): ERROR Cannot accept connection on socket" << std::endl;
+      pthread_mutex_unlock(&mutex);
+      continue;
+    }
+    else if (client_fd == -2) {
+      pthread_mutex_lock(&mutex);
+      proxy_log << "(no-id): ERROR Getnameinfo error" << std::endl;
+      pthread_mutex_unlock(&mutex);
+      continue;
+    }
 
     // do i need to lock this?? I don't think i need
     pthread_mutex_lock(&mutex);
@@ -94,7 +128,6 @@ void * Proxy::handleRequest(void * args) {
   vector<char> request_message(1024 * 1024);
   int len = recv(client_fd, &request_message.data()[0], 1000 * 1000, 0);
   if (len <= 0) {
-    //error to logfile, now I just print to std::cout
     // Send400Error(client_fd);
     close(client_fd);
     return NULL;
@@ -110,8 +143,10 @@ void * Proxy::handleRequest(void * args) {
   // ****************change it to log file later***********************//
   std::time_t now = std::time(nullptr);
   std::tm * utc = std::gmtime(&now);
-  std::cout << request_id << ": \"" << req.getFirstLine() << "\" from " << client_ip
+  pthread_mutex_lock(&mutex);
+  proxy_log << request_id << ": \"" << req.getFirstLine() << "\" from " << client_ip
             << " @ " << std::asctime(utc);
+  pthread_mutex_unlock(&mutex);
 
   if (req.getMethod() == "GET") {
     handleGET(req, client_fd, request_id);
@@ -121,16 +156,21 @@ void * Proxy::handleRequest(void * args) {
   }
   else if (req.getMethod() == "CONNECT") {
     // ID: Requesting "REQUEST" from SERVER
-    // ****************change it to log file later***********************//
-    std::cout << request_id << ": Requesting \"" << req.getFirstLine() << "\" from "
+    pthread_mutex_lock(&mutex);
+    proxy_log << request_id << ": Requesting \"" << req.getFirstLine() << "\" from "
               << req.getHost() << std::endl;
+    pthread_mutex_unlock(&mutex);
+
     handleCONNECT(req, client_fd);
+
     // ID: Tunnel closed
-    std::cout << request_id << ": Tunnel closed" << std::endl;
+    pthread_mutex_lock(&mutex);
+    proxy_log << request_id << ": Tunnel closed" << std::endl;
+    pthread_mutex_unlock(&mutex);
   }
   else {
     // error print to logfile
-    Send400Error(client_fd);
+    Send400Error(client_fd, request_id);
   }
 
   // close the socket and the thread
@@ -145,6 +185,10 @@ void Proxy::handleGET(Request req, int client_fd, int request_id) {
   Client my_client(req.getHost().c_str(), req.getPort().c_str());
   // connect to the remote server
   int my_client_fd = my_client.createConnection();
+  if (my_client_fd == -1) {
+    proxy_log << req.getRequestID() << ": ERROR Cannot connect to socket" << std::endl;
+    return;
+  }
 
   // if in cache
   if (my_cache.isInCache(req)) {
@@ -155,20 +199,25 @@ void Proxy::handleGET(Request req, int client_fd, int request_id) {
                         res_in_cache.getContent().length(),
                         0);
     if (num_sent == -1) {
-      std::cerr << "Error: sending response to client failed" << std::endl;
+      pthread_mutex_lock(&mutex);
+      proxy_log << request_id << ": ERROR Sending response to client failed" << std::endl;
+      pthread_mutex_unlock(&mutex);
       return;
     }
     // ID: Responding "RESPONSE"
-    std::cout << request_id << ": Responding \"" << res_in_cache.getStatus() << "\""
+    pthread_mutex_lock(&mutex);
+    proxy_log << request_id << ": Responding \"" << res_in_cache.getStatus() << "\""
               << std::endl;
+    pthread_mutex_unlock(&mutex);
 
     close(my_client_fd);
     return;
   }
 
   // if not in cache
-  // ****************change it to log file later***********************//
-  std::cout << request_id << ": not in cache" << std::endl;
+  pthread_mutex_lock(&mutex);
+  proxy_log << request_id << ": not in cache" << std::endl;
+  pthread_mutex_unlock(&mutex);
 
   // try \0
   // const char * request_message = req.getContent().c_str();
@@ -178,8 +227,10 @@ void Proxy::handleGET(Request req, int client_fd, int request_id) {
 
   int client_len = send(my_client_fd, request_message, strlen(request_message), 0);
   // ID: Requesting "REQUEST" from SERVER
-  std::cout << request_id << ": Requesting \"" << req.getFirstLine() << "\" from "
+  pthread_mutex_lock(&mutex);
+  proxy_log << request_id << ": Requesting \"" << req.getFirstLine() << "\" from "
             << req.getHost() << std::endl;
+  pthread_mutex_unlock(&mutex);
 
   // const size_t first_buffer_size = BUFSIZ;
   char first_buffer[1024];
@@ -187,16 +238,17 @@ void Proxy::handleGET(Request req, int client_fd, int request_id) {
   // receive first response, contains head and part of body
   int server_len = recv(my_client_fd, first_buffer, 1024, 0);
   if (server_len == -1) {
-    Send502Error(client_fd);
+    Send502Error(client_fd, request_id);
     close(my_client_fd);
     return;
   }
 
   std::string first_response_message;
   first_response_message.append(first_buffer, server_len);
-  // std::cout << "first_response_message: " << first_response_message << std::endl;
 
   Response first_res(first_response_message);
+
+  int remain_len = first_res.getHeadLen() + first_res.getContentlen() - server_len;
 
   const size_t buffer_size = BUFSIZ;
   char buffer[BUFSIZ];
@@ -205,9 +257,14 @@ void Proxy::handleGET(Request req, int client_fd, int request_id) {
   std::string response_message;
   bool response_complete = false;
   while (!response_complete) {
+    if (first_res.getContentlen() != 0 && remain_len <= 0) {
+      response_complete = true;
+      break;
+    }
     int server_len = recv(my_client_fd, buffer, BUFSIZ, 0);
+    remain_len -= server_len;
     if (server_len < 0) {
-      Send502Error(client_fd);
+      Send502Error(client_fd, request_id);
       close(my_client_fd);
       return;
     }
@@ -228,20 +285,26 @@ void Proxy::handleGET(Request req, int client_fd, int request_id) {
   Response res_return(first_response_message);
 
   // ID: Received "RESPONSE" from	SERVER
-  std::cout << request_id << ": Received \"" << res_return.getStatus() << "\" from	"
+  pthread_mutex_lock(&mutex);
+  proxy_log << request_id << ": Received \"" << res_return.getStatus() << "\" from	"
             << req.getHost() << std::endl;
+  pthread_mutex_unlock(&mutex);
 
   int num_sent =
       send(client_fd, first_response_message.c_str(), first_response_message.length(), 0);
   if (num_sent == -1) {
-    std::cerr << "Error: sending response to client failed" << std::endl;
+    pthread_mutex_lock(&mutex);
+    proxy_log << request_id << ": ERROR Sending response to client failed" << std::endl;
+    pthread_mutex_unlock(&mutex);
     close(my_client_fd);
     return;
   }
 
   // ID: Responding "RESPONSE"
-  std::cout << request_id << ": Responding \"" << res_return.getStatus() << "\""
+  pthread_mutex_lock(&mutex);
+  proxy_log << request_id << ": Responding \"" << res_return.getStatus() << "\""
             << std::endl;
+  pthread_mutex_unlock(&mutex);
 
   // if response is not chunked, add it to the cache
   if (!res_return.chunked) {
@@ -251,8 +314,10 @@ void Proxy::handleGET(Request req, int client_fd, int request_id) {
   }
   else {
     // ID: not cacheable because chunked
-    std::cout << request_id << ": not cacheable because "
+    pthread_mutex_lock(&mutex);
+    proxy_log << request_id << ": not cacheable because "
               << "response is chunked" << std::endl;
+    pthread_mutex_unlock(&mutex);
   }
 
   close(my_client_fd);
@@ -262,8 +327,10 @@ void Proxy::handlePOST(Request req, int client_fd) {
   Client my_client(req.getHost().c_str(), req.getPort().c_str());
   // connect to the remote server
   int my_client_fd = my_client.createConnection();
-
-  std::cout << req.getRequestID() << ": not in cache" << std::endl;
+  if (my_client_fd == -1) {
+    proxy_log << req.getRequestID() << ": ERROR Cannot connect to socket" << std::endl;
+    return;
+  }
 
   // try \0
   // const char * request_message = req.getContent().c_str();
@@ -273,8 +340,10 @@ void Proxy::handlePOST(Request req, int client_fd) {
 
   int client_len = send(my_client_fd, request_message, strlen(request_message), 0);
   // ID: Requesting "REQUEST" from SERVER
-  std::cout << req.getRequestID() << ": Requesting \"" << req.getFirstLine() << "\" from "
+  pthread_mutex_lock(&mutex);
+  proxy_log << req.getRequestID() << ": Requesting \"" << req.getFirstLine() << "\" from "
             << req.getHost() << std::endl;
+  pthread_mutex_unlock(&mutex);
 
   // const size_t first_buffer_size = BUFSIZ;
   char first_buffer[1024];
@@ -282,7 +351,7 @@ void Proxy::handlePOST(Request req, int client_fd) {
   // receive first response, contains head and part of body
   int server_len = recv(my_client_fd, first_buffer, 1024, 0);
   if (server_len == -1) {
-    Send502Error(client_fd);
+    Send502Error(client_fd, req.getRequestID());
     close(my_client_fd);
     return;
   }
@@ -292,6 +361,8 @@ void Proxy::handlePOST(Request req, int client_fd) {
 
   Response first_res(first_response_message);
 
+  int remain_len = first_res.getHeadLen() + first_res.getContentlen() - server_len;
+
   const size_t buffer_size = BUFSIZ;
   char buffer[BUFSIZ];
 
@@ -299,9 +370,13 @@ void Proxy::handlePOST(Request req, int client_fd) {
   std::string response_message;
   bool response_complete = false;
   while (!response_complete) {
+    if (first_res.getContentlen() != 0 && remain_len <= 0) {
+      response_complete = true;
+      break;
+    }
     int server_len = recv(my_client_fd, buffer, BUFSIZ, 0);
     if (server_len < 0) {
-      Send502Error(client_fd);
+      Send502Error(client_fd, req.getRequestID());
       close(my_client_fd);
       return;
     }
@@ -322,20 +397,26 @@ void Proxy::handlePOST(Request req, int client_fd) {
   Response res_return(first_response_message);
 
   // ID: Received "RESPONSE" from	SERVER
-  std::cout << req.getRequestID() << ": Received \"" << res_return.getStatus()
+  pthread_mutex_lock(&mutex);
+  proxy_log << req.getRequestID() << ": Received \"" << res_return.getStatus()
             << "\" from	" << req.getHost() << std::endl;
+  pthread_mutex_unlock(&mutex);
 
   int num_sent =
       send(client_fd, first_response_message.c_str(), first_response_message.length(), 0);
   if (num_sent == -1) {
-    std::cerr << "Error: sending response to client failed" << std::endl;
+    pthread_mutex_lock(&mutex);
+    proxy_log << "ERROR Sending response to client failed" << std::endl;
+    pthread_mutex_unlock(&mutex);
     close(my_client_fd);
     return;
   }
 
   // ID: Responding "RESPONSE"
-  std::cout << req.getRequestID() << ": Responding \"" << res_return.getStatus() << "\""
+  pthread_mutex_lock(&mutex);
+  proxy_log << req.getRequestID() << ": Responding \"" << res_return.getStatus() << "\""
             << std::endl;
+  pthread_mutex_unlock(&mutex);
 
   close(my_client_fd);
 }
@@ -343,13 +424,19 @@ void Proxy::handlePOST(Request req, int client_fd) {
 void Proxy::handleCONNECT(Request req, int client_fd) {
   Client my_client(req.getHost().c_str(), req.getPort().c_str());
   int my_client_fd = my_client.createConnection();
+  if (my_client_fd == -1) {
+    proxy_log << req.getRequestID() << ": ERROR Cannot connect to socket" << std::endl;
+    return;
+  }
 
   std::string response = "HTTP/1.1 200 OK\r\n\r\n";
   send(client_fd, response.c_str(), response.length(), 0);
 
   // ID: Responding "RESPONSE"
-  std::cout << req.getRequestID() << ": Responding "
+  pthread_mutex_lock(&mutex);
+  proxy_log << req.getRequestID() << ": Responding "
             << "\"HTTP/1.1 200 OK\"" << std::endl;
+  pthread_mutex_unlock(&mutex);
 
   fd_set readfds;
   int maxfd = std::max(my_client_fd, client_fd);
@@ -361,7 +448,9 @@ void Proxy::handleCONNECT(Request req, int client_fd) {
 
     int status = select(maxfd + 1, &readfds, NULL, NULL, NULL);
     if (status == -1) {
-      std::cerr << "Error: select failed!" << std::endl;
+      pthread_mutex_lock(&mutex);
+      proxy_log << req.getRequestID() << ": ERROR Select failed!" << std::endl;
+      pthread_mutex_unlock(&mutex);
       return;
     }
 
@@ -374,7 +463,10 @@ void Proxy::handleCONNECT(Request req, int client_fd) {
 
       int len_send = send(my_client_fd, request_message, len_recv, 0);
       if (len_send <= 0) {
-        std::cerr << "Error: forwarding response to client failed" << std::endl;
+        pthread_mutex_lock(&mutex);
+        proxy_log << req.getRequestID() << ": ERROR Forwarding response to client failed"
+                  << std::endl;
+        pthread_mutex_unlock(&mutex);
         return;
       }
     }
@@ -387,25 +479,32 @@ void Proxy::handleCONNECT(Request req, int client_fd) {
       }
       int len_send = send(client_fd, response_message, len_recv, 0);
       if (len_send <= 0) {
-        std::cerr << "Error: forwarding response to client failed" << std::endl;
+        pthread_mutex_lock(&mutex);
+        proxy_log << req.getRequestID() << ": ERROR Forwarding response to client failed"
+                  << std::endl;
+        pthread_mutex_unlock(&mutex);
         return;
       }
     }
   }
 }
 
-void Proxy::Send502Error(int client_fd) {
+void Proxy::Send502Error(int client_fd, int id) {
   string response = "HTTP/1.1 502 Bad Gateway\r\n\r\n";
   if (send(client_fd, response.c_str(), response.size(), 0) == -1) {
-    std::cerr << "Send 502 failed!" << std::endl;
-    exit(EXIT_FAILURE);
+    pthread_mutex_lock(&mutex);
+    proxy_log << id << ": ERROR Send 502 failed!" << std::endl;
+    pthread_mutex_unlock(&mutex);
+    return;
   }
 }
 
-void Proxy::Send400Error(int client_fd) {
+void Proxy::Send400Error(int client_fd, int id) {
   string response = "HTTP/1.1 400 Bad Request\r\n\r\n";
   if (send(client_fd, response.c_str(), response.size(), 0) == -1) {
-    std::cerr << "Send 400 failed!" << std::endl;
-    exit(EXIT_FAILURE);
+    pthread_mutex_lock(&mutex);
+    proxy_log << id << ": ERROR Send 400 failed!" << std::endl;
+    pthread_mutex_unlock(&mutex);
+    return;
   }
 }

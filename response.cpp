@@ -23,7 +23,7 @@ void Response::parseExpire() {
     size_t Expire_begin = response_content.find("Expires: ");
     size_t Expire_end = response_content.find("\r\n", Expire_begin);
     Expire_begin += 9;
-    date = response_content.substr(Expire_begin, Expire_end - Expire_begin);
+    expire = response_content.substr(Expire_begin, Expire_end - Expire_begin);
   }
 }
 

@@ -27,10 +27,10 @@ class Server {
     free(my_host_info_list);
     close(fd);
   }
-  void createServer();
-  void init_addrinfo();
-  void createSocket();
-  void listenToSocket();
+  int createServer();
+  int init_addrinfo();
+  int createSocket();
+  int listenToSocket();
   std::pair<int, std::string> acceptConnection();
 };
 #endif  // SERVER_HPP

@@ -13,17 +13,17 @@ void Cache::addToCache(Request req, Response res) {
   // if no-store or private, do not store this response in http proxy
   if (res.no_store) {
     // do not store
-    std::cout << req.getRequestID() << ": not cacheable because "
+    proxy_log << req.getRequestID() << ": not cacheable because "
               << "response is no-store" << std::endl;
     return;
   }
   if (res.Private) {
-    std::cout << req.getRequestID() << ": not cacheable because "
+    proxy_log << req.getRequestID() << ": not cacheable because "
               << "response is private" << std::endl;
     return;
   }
   if (res.getEtag().empty() && res.getLastModify().empty()) {
-    std::cout << req.getRequestID() << ": not cacheable because "
+    proxy_log << req.getRequestID() << ": not cacheable because "
               << "response does not have Etag or Last Modified Time" << std::endl;
     return;
   }
@@ -50,7 +50,7 @@ bool Cache::checkValidate(Request req, Response res, int request_id) {
   // if no-cache, need to send a validation request before using any stored response
   if (res.no_cache) {
     // ID: in cache, requires validation
-    std::cout << request_id << " in cache, requires validation" << std::endl;
+    proxy_log << request_id << ": in cache, requires validation" << std::endl;
     return false;
   }
 
@@ -61,12 +61,12 @@ bool Cache::checkValidate(Request req, Response res, int request_id) {
     expires_time = response_receive_time + res.getMaxage();
   }
   // do not have max-age but has expire time
-  else if (res.getExpires().empty()) {
+  else if (!res.getExpires().empty()) {
     expires_time = parseHttpResponseTime(res.getExpires());
   }
   // has nothing
   else {
-    std::cout << request_id << ": in cache, valid" << std::endl;
+    proxy_log << request_id << ": in cache, valid" << std::endl;
     return true;
   }
 
@@ -80,11 +80,11 @@ bool Cache::checkValidate(Request req, Response res, int request_id) {
   if (expires_time < now) {
     // ID: in cache, but expired at EXPIREDTIME
     std::tm * utc = std::gmtime(&expires_time);
-    std::cout << request_id << ": in cache, but expired at " << std::asctime(utc);
+    proxy_log << request_id << ": in cache, but expired at " << std::asctime(utc);
     return false;
   }
 
-  std::cout << request_id << ": in cache, valid" << std::endl;
+  proxy_log << request_id << ": in cache, valid" << std::endl;
   return true;
 }
 
@@ -109,7 +109,7 @@ Response * Cache::getCacheResonse(Request req, int fd) {
 
   // send request to server
   // ID: Requesting "REQUEST" from SERVER
-  std::cout << req.getRequestID() << ": Requesting \"" << req.getFirstLine() << "\" from "
+  proxy_log << req.getRequestID() << ": Requesting \"" << req.getFirstLine() << "\" from "
             << req.getHost() << std::endl;
   if (send(fd, validate_request.c_str(), validate_request.length(), 0) < 0) {
     std::cerr << "Error sending validate_request." << std::endl;
@@ -127,7 +127,7 @@ Response * Cache::getCacheResonse(Request req, int fd) {
 
   Response * validate_response = new Response(response);
   // ID: Received "RESPONSE" from	SERVER
-  std::cout << req.getRequestID() << ": Received \"" << validate_response->getStatus()
+  proxy_log << req.getRequestID() << ": Received \"" << validate_response->getStatus()
             << "\"" << std::endl;
 
   // 304 not modified

@@ -29,7 +29,10 @@ void Request::parseHost() {
     if (temp.find(":") != string ::npos) {
       port = temp.substr(comma + 1, host_end - comma);
     }
-    port = "80";
+    else
+    {
+      port = "80";
+    }
   }
   else if (method == "CONNECT") {
     port = temp.substr(comma + 1, host_end - comma);

@@ -10,6 +10,7 @@
 
 #include <chrono>
 #include <ctime>
+#include <fstream>
 #include <iomanip>
 #include <queue>
 #include <sstream>
@@ -22,11 +23,13 @@
 
 class Cache {
   int capacity;
+  std::ofstream& proxy_log;
   std::unordered_map<std::string, Response> cachePipe;
   std::queue<std::string> cacheQueue;
 
  public:
-  Cache(int capacity) : capacity(capacity){};
+  Cache(int capacity, std::ofstream & proxy_log) :
+      capacity(capacity), proxy_log(proxy_log){};
   void addToCache(Request req, Response res);
   bool checkValidate(Request req, Response res, int request_id);
   Response * getCacheResonse(Request req, int fd);

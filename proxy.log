@@ -1,0 +1,236 @@
+2: "CONNECT push.services.mozilla.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:33:48 2023
+2: Requesting "CONNECT push.services.mozilla.com:443 HTTP/1.1" from push.services.mozilla.com
+3: "CONNECT www.google.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:33:49 2023
+3: Requesting "CONNECT www.google.com:443 HTTP/1.1" from www.google.com
+3: Responding "HTTP/1.1 200 OK"
+2: Responding "HTTP/1.1 200 OK"
+4: "POST http://r3.o.lencr.org/ HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:33:49 2023
+4: Requesting "POST http://r3.o.lencr.org/ HTTP/1.1" from r3.o.lencr.org
+10: "CONNECT tracking.firefox.com.cn:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:33:51 2023
+10: Requesting "CONNECT tracking.firefox.com.cn:443 HTTP/1.1" from tracking.firefox.com.cn
+11: "CONNECT o1069899.ingest.sentry.io:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:33:51 2023
+11: Requesting "CONNECT o1069899.ingest.sentry.io:443 HTTP/1.1" from o1069899.ingest.sentry.io
+11: Responding "HTTP/1.1 200 OK"
+10: Responding "HTTP/1.1 200 OK"
+15: "GET http://httpbin.org/post HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:33:52 2023
+15: not in cache
+15: Requesting "GET http://httpbin.org/post HTTP/1.1" from httpbin.org
+17: "CONNECT safebrowsing.googleapis.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:33:52 2023
+17: Requesting "CONNECT safebrowsing.googleapis.com:443 HTTP/1.1" from safebrowsing.googleapis.com
+17: Responding "HTTP/1.1 200 OK"
+9: "CONNECT firefox.settings.services.mozilla.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:33:52 2023
+9: Requesting "CONNECT firefox.settings.services.mozilla.com:443 HTTP/1.1" from firefox.settings.services.mozilla.com
+9: Responding "HTTP/1.1 200 OK"
+17: Tunnel closed
+20: "CONNECT newtab.firefoxchina.cn:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:33:52 2023
+20: Requesting "CONNECT newtab.firefoxchina.cn:443 HTTP/1.1" from newtab.firefoxchina.cn
+21: "POST http://r3.o.lencr.org/ HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:33:52 2023
+21: Requesting "POST http://r3.o.lencr.org/ HTTP/1.1" from r3.o.lencr.org
+20: Responding "HTTP/1.1 200 OK"
+23: "CONNECT content-signature-2.cdn.mozilla.net:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:33:54 2023
+23: Requesting "CONNECT content-signature-2.cdn.mozilla.net:443 HTTP/1.1" from content-signature-2.cdn.mozilla.net
+23: Responding "HTTP/1.1 200 OK"
+18: "CONNECT newtab.firefoxchina.cn:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:33:55 2023
+18: Requesting "CONNECT newtab.firefoxchina.cn:443 HTTP/1.1" from newtab.firefoxchina.cn
+18: Responding "HTTP/1.1 200 OK"
+26: "CONNECT www.baidu.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:33:56 2023
+26: Requesting "CONNECT www.baidu.com:443 HTTP/1.1" from www.baidu.com
+27: "CONNECT www.baidu.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:33:56 2023
+27: Requesting "CONNECT www.baidu.com:443 HTTP/1.1" from www.baidu.com
+28: "CONNECT www.baidu.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:33:57 2023
+28: Requesting "CONNECT www.baidu.com:443 HTTP/1.1" from www.baidu.com
+28: Responding "HTTP/1.1 200 OK"
+26: Responding "HTTP/1.1 200 OK"
+26: Tunnel closed
+27: Responding "HTTP/1.1 200 OK"
+27: Tunnel closed
+28: Tunnel closed
+29: "CONNECT www.baidu.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:33:57 2023
+29: Requesting "CONNECT www.baidu.com:443 HTTP/1.1" from www.baidu.com
+29: Responding "HTTP/1.1 200 OK"
+29: Tunnel closed
+30: "CONNECT www.baidu.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:33:58 2023
+30: Requesting "CONNECT www.baidu.com:443 HTTP/1.1" from www.baidu.com
+31: "CONNECT www.baidu.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:33:58 2023
+31: Requesting "CONNECT www.baidu.com:443 HTTP/1.1" from www.baidu.com
+31: Responding "HTTP/1.1 200 OK"
+30: Responding "HTTP/1.1 200 OK"
+30: Tunnel closed
+31: Tunnel closed
+33: "CONNECT www.youtube.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:33:59 2023
+33: Requesting "CONNECT www.youtube.com:443 HTTP/1.1" from www.youtube.com
+33: Responding "HTTP/1.1 200 OK"
+34: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:33:59 2023
+34: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
+35: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:33:59 2023
+35: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
+34: Responding "HTTP/1.1 200 OK"
+36: "CONNECT i.ytimg.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:33:59 2023
+36: Requesting "CONNECT i.ytimg.com:443 HTTP/1.1" from i.ytimg.com
+35: Responding "HTTP/1.1 200 OK"
+36: Responding "HTTP/1.1 200 OK"
+37: "CONNECT fonts.googleapis.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:33:59 2023
+37: Requesting "CONNECT fonts.googleapis.com:443 HTTP/1.1" from fonts.googleapis.com
+37: Responding "HTTP/1.1 200 OK"
+38: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:33:59 2023
+39: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:33:59 2023
+38: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+39: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+41: "CONNECT accounts.google.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:33:59 2023
+41: Requesting "CONNECT accounts.google.com:443 HTTP/1.1" from accounts.google.com
+41: Responding "HTTP/1.1 200 OK"
+43: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:33:59 2023
+43: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+44: "CONNECT www.gstatic.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:00 2023
+44: Requesting "CONNECT www.gstatic.com:443 HTTP/1.1" from www.gstatic.com
+44: Responding "HTTP/1.1 200 OK"
+44: Tunnel closed
+45: "CONNECT googleads.g.doubleclick.net:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:00 2023
+45: Requesting "CONNECT googleads.g.doubleclick.net:443 HTTP/1.1" from googleads.g.doubleclick.net
+45: Responding "HTTP/1.1 200 OK"
+46: "CONNECT www.gstatic.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:01 2023
+46: Requesting "CONNECT www.gstatic.com:443 HTTP/1.1" from www.gstatic.com
+46: Responding "HTTP/1.1 200 OK"
+47: "CONNECT yt3.ggpht.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:01 2023
+47: Requesting "CONNECT yt3.ggpht.com:443 HTTP/1.1" from yt3.ggpht.com
+48: "CONNECT yt3.ggpht.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:01 2023
+48: Requesting "CONNECT yt3.ggpht.com:443 HTTP/1.1" from yt3.ggpht.com
+47: Responding "HTTP/1.1 200 OK"
+48: Responding "HTTP/1.1 200 OK"
+49: "CONNECT yt3.ggpht.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:01 2023
+49: Requesting "CONNECT yt3.ggpht.com:443 HTTP/1.1" from yt3.ggpht.com
+49: Responding "HTTP/1.1 200 OK"
+50: "CONNECT yt3.ggpht.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:01 2023
+50: Requesting "CONNECT yt3.ggpht.com:443 HTTP/1.1" from yt3.ggpht.com
+50: Responding "HTTP/1.1 200 OK"
+48: Tunnel closed
+49: Tunnel closed
+50: Tunnel closed
+15: Received "HTTP/1.1 504 Gateway Time-out" from	httpbin.org
+15: Responding "HTTP/1.1 504 Gateway Time-out"
+15: not cacheable because response does not have Etag or Last Modified Time
+53: "CONNECT static.doubleclick.net:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:03 2023
+53: Requesting "CONNECT static.doubleclick.net:443 HTTP/1.1" from static.doubleclick.net
+54: "CONNECT jnn-pa.googleapis.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:03 2023
+54: Requesting "CONNECT jnn-pa.googleapis.com:443 HTTP/1.1" from jnn-pa.googleapis.com
+53: Responding "HTTP/1.1 200 OK"
+54: Responding "HTTP/1.1 200 OK"
+55: "CONNECT rr2---sn-hjoj-jaul.googlevideo.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:03 2023
+55: Requesting "CONNECT rr2---sn-hjoj-jaul.googlevideo.com:443 HTTP/1.1" from rr2---sn-hjoj-jaul.googlevideo.com
+55: Responding "HTTP/1.1 200 OK"
+56: "CONNECT youtube.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:03 2023
+56: Requesting "CONNECT youtube.com:443 HTTP/1.1" from youtube.com
+56: Responding "HTTP/1.1 200 OK"
+57: "CONNECT tpc.googlesyndication.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:04 2023
+57: Requesting "CONNECT tpc.googlesyndication.com:443 HTTP/1.1" from tpc.googlesyndication.com
+57: Responding "HTTP/1.1 200 OK"
+58: "CONNECT encrypted-tbn3.gstatic.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:05 2023
+58: Requesting "CONNECT encrypted-tbn3.gstatic.com:443 HTTP/1.1" from encrypted-tbn3.gstatic.com
+59: "CONNECT encrypted-tbn1.gstatic.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:05 2023
+59: Requesting "CONNECT encrypted-tbn1.gstatic.com:443 HTTP/1.1" from encrypted-tbn1.gstatic.com
+58: Responding "HTTP/1.1 200 OK"
+60: "CONNECT lh3.googleusercontent.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:05 2023
+60: Requesting "CONNECT lh3.googleusercontent.com:443 HTTP/1.1" from lh3.googleusercontent.com
+59: Responding "HTTP/1.1 200 OK"
+61: "CONNECT encrypted-tbn3.gstatic.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:05 2023
+61: Requesting "CONNECT encrypted-tbn3.gstatic.com:443 HTTP/1.1" from encrypted-tbn3.gstatic.com
+60: Responding "HTTP/1.1 200 OK"
+61: Responding "HTTP/1.1 200 OK"
+62: "CONNECT encrypted-tbn0.gstatic.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:05 2023
+62: Requesting "CONNECT encrypted-tbn0.gstatic.com:443 HTTP/1.1" from encrypted-tbn0.gstatic.com
+63: "CONNECT rr2---sn-hjoj-jaul.googlevideo.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:05 2023
+63: Requesting "CONNECT rr2---sn-hjoj-jaul.googlevideo.com:443 HTTP/1.1" from rr2---sn-hjoj-jaul.googlevideo.com
+63: Responding "HTTP/1.1 200 OK"
+62: Responding "HTTP/1.1 200 OK"
+64: "CONNECT rr1---sn-hjoj-jaul.googlevideo.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:05 2023
+64: Requesting "CONNECT rr1---sn-hjoj-jaul.googlevideo.com:443 HTTP/1.1" from rr1---sn-hjoj-jaul.googlevideo.com
+64: Responding "HTTP/1.1 200 OK"
+65: "CONNECT rr1---sn-hjoj-jaul.googlevideo.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:05 2023
+65: Requesting "CONNECT rr1---sn-hjoj-jaul.googlevideo.com:443 HTTP/1.1" from rr1---sn-hjoj-jaul.googlevideo.com
+65: Responding "HTTP/1.1 200 OK"
+61: Tunnel closed
+67: "CONNECT pagead2.googlesyndication.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:05 2023
+67: Requesting "CONNECT pagead2.googlesyndication.com:443 HTTP/1.1" from pagead2.googlesyndication.com
+67: Responding "HTTP/1.1 200 OK"
+68: "CONNECT pagead2.googlesyndication.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:05 2023
+68: Requesting "CONNECT pagead2.googlesyndication.com:443 HTTP/1.1" from pagead2.googlesyndication.com
+68: Responding "HTTP/1.1 200 OK"
+68: Tunnel closed
+69: "CONNECT mtalk.google.com:5228 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:05 2023
+69: Requesting "CONNECT mtalk.google.com:5228 HTTP/1.1" from mtalk.google.com
+69: Responding "HTTP/1.1 200 OK"
+70: "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:10 2023
+70: not in cache
+70: Requesting "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from detectportal.firefox.com
+70: Received "HTTP/1.1 200 OK" from	detectportal.firefox.com
+70: Responding "HTTP/1.1 200 OK"
+70: not cacheable because response does not have Etag or Last Modified Time
+71: "GET http://detectportal.firefox.com/success.txt?ipv6 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:10 2023
+71: not in cache
+71: Requesting "GET http://detectportal.firefox.com/success.txt?ipv6 HTTP/1.1" from detectportal.firefox.com
+72: "GET http://detectportal.firefox.com/success.txt?ipv4 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:10 2023
+71: Received "HTTP/1.1 200 OK" from	detectportal.firefox.com
+71: Responding "HTTP/1.1 200 OK"
+71: not cacheable because response does not have Etag or Last Modified Time
+72: not in cache
+72: Requesting "GET http://detectportal.firefox.com/success.txt?ipv4 HTTP/1.1" from detectportal.firefox.com
+72: Received "HTTP/1.1 200 OK" from	detectportal.firefox.com
+72: Responding "HTTP/1.1 200 OK"
+72: not cacheable because response does not have Etag or Last Modified Time
+73: "CONNECT r4---sn-tt1e7nls.googlevideo.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:14 2023
+73: Requesting "CONNECT r4---sn-tt1e7nls.googlevideo.com:443 HTTP/1.1" from r4---sn-tt1e7nls.googlevideo.com
+73: Responding "HTTP/1.1 200 OK"
+73: Tunnel closed
+74: "CONNECT www.googleadservices.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:16 2023
+74: Requesting "CONNECT www.googleadservices.com:443 HTTP/1.1" from www.googleadservices.com
+74: Responding "HTTP/1.1 200 OK"
+76: "CONNECT play.google.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:34 2023
+76: Requesting "CONNECT play.google.com:443 HTTP/1.1" from play.google.com
+76: Responding "HTTP/1.1 200 OK"
+75: "CONNECT play.google.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:35 2023
+75: Requesting "CONNECT play.google.com:443 HTTP/1.1" from play.google.com
+75: Responding "HTTP/1.1 200 OK"
+51: "GET http://httpbin.org/post HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:44 2023
+51: not in cache
+51: Requesting "GET http://httpbin.org/post HTTP/1.1" from httpbin.org
+77: "CONNECT history.google.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:47 2023
+77: Requesting "CONNECT history.google.com:443 HTTP/1.1" from history.google.com
+77: Responding "HTTP/1.1 200 OK"
+78: "CONNECT play.google.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:47 2023
+78: Requesting "CONNECT play.google.com:443 HTTP/1.1" from play.google.com
+78: Responding "HTTP/1.1 200 OK"
+79: "CONNECT www.google.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:49 2023
+79: Requesting "CONNECT www.google.com:443 HTTP/1.1" from www.google.com
+79: Responding "HTTP/1.1 200 OK"
+77: Tunnel closed
+78: Tunnel closed
+79: Tunnel closed
+51: Received "HTTP/1.1 405 METHOD NOT ALLOWED" from	httpbin.org
+51: Responding "HTTP/1.1 405 METHOD NOT ALLOWED"
+51: not cacheable because response does not have Etag or Last Modified Time
+38: Received "HTTP/1.1 408 Request Timeout" from	ocsp.digicert.com
+38: Responding "HTTP/1.1 408 Request Timeout"
+82: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:34:59 2023
+82: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+39: Received "HTTP/1.1 408 Request Timeout" from	ocsp.digicert.com
+39: Responding "HTTP/1.1 408 Request Timeout"
+83: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:35:00 2023
+83: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+20: Tunnel closed
+18: Tunnel closed
+84: "CONNECT safebrowsing.googleapis.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:35:36 2023
+84: Requesting "CONNECT safebrowsing.googleapis.com:443 HTTP/1.1" from safebrowsing.googleapis.com
+84: Responding "HTTP/1.1 200 OK"
+84: Tunnel closed
+85: "CONNECT www.google.com:443 HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:35:44 2023
+85: Requesting "CONNECT www.google.com:443 HTTP/1.1" from www.google.com
+85: Responding "HTTP/1.1 200 OK"
+4: Received "HTTP/1.1   0 Init" from	r3.o.lencr.org
+4: Responding "HTTP/1.1   0 Init"
+86: "POST http://r3.o.lencr.org/ HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:35:49 2023
+86: Requesting "POST http://r3.o.lencr.org/ HTTP/1.1" from r3.o.lencr.org
+85: Tunnel closed
+21: Received "HTTP/1.1   0 Init" from	r3.o.lencr.org
+21: Responding "HTTP/1.1   0 Init"
+87: "POST http://r3.o.lencr.org/ HTTP/1.1" from 10.197.38.242 @ Mon Feb 27 22:35:52 2023
+87: Requesting "POST http://r3.o.lencr.org/ HTTP/1.1" from r3.o.lencr.org

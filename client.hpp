@@ -22,16 +22,16 @@ class Client {
  public:
   Client() : hostname(NULL), port(NULL) {}
   Client(const char * hostname, const char * port) : hostname(hostname), port(port) {
-    createClient();
+    int status = createClient();
   }
   ~Client() {
     free(host_info_list);
     close(fd);
   }
 
-  void createClient();
-  void init_addrinfo();
-  void createSocket();
+  int createClient();
+  int init_addrinfo();
+  int createSocket();
   int createConnection();
 };
 
