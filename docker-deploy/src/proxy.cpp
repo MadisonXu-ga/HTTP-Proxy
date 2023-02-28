@@ -5,7 +5,7 @@
 #include <fstream>
 #include <vector>
 
-std::ofstream proxy_log("./proxy.log");
+std::ofstream proxy_log("/var/log/erss/proxy.log");
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 

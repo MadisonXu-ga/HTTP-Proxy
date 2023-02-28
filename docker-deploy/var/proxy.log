@@ -1,0 +1,110 @@
+0: "CONNECT a.sinaimg.cn:443 HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:10 2023
+0: Requesting "CONNECT a.sinaimg.cn:443 HTTP/1.1" from a.sinaimg.cn
+2: "CONNECT weibo.com:443 HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:10 2023
+2: Requesting "CONNECT weibo.com:443 HTTP/1.1" from weibo.com
+3: "CONNECT h5.sinaimg.cn:443 HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:10 2023
+3: Requesting "CONNECT h5.sinaimg.cn:443 HTTP/1.1" from h5.sinaimg.cn
+0: Responding "HTTP/1.1 200 OK"
+3: Responding "HTTP/1.1 200 OK"
+2: Responding "HTTP/1.1 200 OK"
+5: "CONNECT i.sso.sina.com.cn:443 HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:12 2023
+5: Requesting "CONNECT i.sso.sina.com.cn:443 HTTP/1.1" from i.sso.sina.com.cn
+5: Responding "HTTP/1.1 200 OK"
+6: "CONNECT kadmimage.biz.weibo.com:443 HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:13 2023
+6: Requesting "CONNECT kadmimage.biz.weibo.com:443 HTTP/1.1" from kadmimage.biz.weibo.com
+0: Tunnel closed
+3: Tunnel closed
+5: Tunnel closed
+6: Responding "HTTP/1.1 200 OK"
+7: "CONNECT wx1.sinaimg.cn:443 HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:15 2023
+7: Requesting "CONNECT wx1.sinaimg.cn:443 HTTP/1.1" from wx1.sinaimg.cn
+8: "CONNECT tvax4.sinaimg.cn:443 HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:15 2023
+8: Requesting "CONNECT tvax4.sinaimg.cn:443 HTTP/1.1" from tvax4.sinaimg.cn
+9: "CONNECT tvax3.sinaimg.cn:443 HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:15 2023
+9: Requesting "CONNECT tvax3.sinaimg.cn:443 HTTP/1.1" from tvax3.sinaimg.cn
+10: "CONNECT g.us.sinaimg.cn:443 HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:15 2023
+10: Requesting "CONNECT g.us.sinaimg.cn:443 HTTP/1.1" from g.us.sinaimg.cn
+11: "CONNECT g.us.sinaimg.cn:443 HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:15 2023
+11: Requesting "CONNECT g.us.sinaimg.cn:443 HTTP/1.1" from g.us.sinaimg.cn
+12: "CONNECT g.us.sinaimg.cn:443 HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:15 2023
+12: Requesting "CONNECT g.us.sinaimg.cn:443 HTTP/1.1" from g.us.sinaimg.cn
+8: Responding "HTTP/1.1 200 OK"
+9: Responding "HTTP/1.1 200 OK"
+13: "CONNECT rum.h5.weibo.cn:443 HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:15 2023
+13: Requesting "CONNECT rum.h5.weibo.cn:443 HTTP/1.1" from rum.h5.weibo.cn
+7: Responding "HTTP/1.1 200 OK"
+10: Responding "HTTP/1.1 200 OK"
+12: Responding "HTTP/1.1 200 OK"
+11: Responding "HTTP/1.1 200 OK"
+11: Tunnel closed
+10: Tunnel closed
+14: "CONNECT wx3.sinaimg.cn:443 HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:16 2023
+14: Requesting "CONNECT wx3.sinaimg.cn:443 HTTP/1.1" from wx3.sinaimg.cn
+15: "CONNECT wx2.sinaimg.cn:443 HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:16 2023
+15: Requesting "CONNECT wx2.sinaimg.cn:443 HTTP/1.1" from wx2.sinaimg.cn
+16: "CONNECT tva4.sinaimg.cn:443 HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:16 2023
+16: Requesting "CONNECT tva4.sinaimg.cn:443 HTTP/1.1" from tva4.sinaimg.cn
+17: "CONNECT tvax2.sinaimg.cn:443 HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:16 2023
+17: Requesting "CONNECT tvax2.sinaimg.cn:443 HTTP/1.1" from tvax2.sinaimg.cn
+18: "CONNECT face.t.sinajs.cn:443 HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:16 2023
+18: Requesting "CONNECT face.t.sinajs.cn:443 HTTP/1.1" from face.t.sinajs.cn
+19: "CONNECT wx4.sinaimg.cn:443 HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:16 2023
+19: Requesting "CONNECT wx4.sinaimg.cn:443 HTTP/1.1" from wx4.sinaimg.cn
+20: "CONNECT wx3.sinaimg.cn:443 HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:16 2023
+20: Requesting "CONNECT wx3.sinaimg.cn:443 HTTP/1.1" from wx3.sinaimg.cn
+21: "CONNECT wx3.sinaimg.cn:443 HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:16 2023
+21: Requesting "CONNECT wx3.sinaimg.cn:443 HTTP/1.1" from wx3.sinaimg.cn
+22: "CONNECT wx3.sinaimg.cn:443 HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:16 2023
+22: Requesting "CONNECT wx3.sinaimg.cn:443 HTTP/1.1" from wx3.sinaimg.cn
+23: "CONNECT wx3.sinaimg.cn:443 HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:16 2023
+23: Requesting "CONNECT wx3.sinaimg.cn:443 HTTP/1.1" from wx3.sinaimg.cn
+23: Responding "HTTP/1.1 200 OK"
+22: Responding "HTTP/1.1 200 OK"
+20: Responding "HTTP/1.1 200 OK"
+21: Responding "HTTP/1.1 200 OK"
+14: Responding "HTTP/1.1 200 OK"
+24: "CONNECT face.t.sinajs.cn:443 HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:16 2023
+24: Requesting "CONNECT face.t.sinajs.cn:443 HTTP/1.1" from face.t.sinajs.cn
+13: Responding "HTTP/1.1 200 OK"
+25: "CONNECT face.t.sinajs.cn:443 HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:17 2023
+25: Requesting "CONNECT face.t.sinajs.cn:443 HTTP/1.1" from face.t.sinajs.cn
+21: Tunnel closed
+23: Tunnel closed
+14: Tunnel closed
+20: Tunnel closed
+26: "CONNECT wx4.sinaimg.cn:443 HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:17 2023
+26: Requesting "CONNECT wx4.sinaimg.cn:443 HTTP/1.1" from wx4.sinaimg.cn
+15: Responding "HTTP/1.1 200 OK"
+16: Responding "HTTP/1.1 200 OK"
+17: Responding "HTTP/1.1 200 OK"
+26: Responding "HTTP/1.1 200 OK"
+25: Responding "HTTP/1.1 200 OK"
+19: Responding "HTTP/1.1 200 OK"
+18: Responding "HTTP/1.1 200 OK"
+24: Responding "HTTP/1.1 200 OK"
+24: Tunnel closed
+19: Tunnel closed
+25: Tunnel closed
+8: Tunnel closed
+18: Tunnel closed
+22: Tunnel closed
+7: Tunnel closed
+26: Tunnel closed
+2: Tunnel closed
+12: Tunnel closed
+6: Tunnel closed
+17: Tunnel closed
+9: Tunnel closed
+16: Tunnel closed
+13: Tunnel closed
+15: Tunnel closed
+28: "POST http://httpbin.org/post HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:24 2023
+28: Requesting "POST http://httpbin.org/post HTTP/1.1" from httpbin.org
+30: "CONNECT www.google.com:443 HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:25 2023
+30: Requesting "CONNECT www.google.com:443 HTTP/1.1" from www.google.com
+30: Responding "HTTP/1.1 200 OK"
+30: Tunnel closed
+31: "CONNECT www.google.com:443 HTTP/1.1" from 10.197.38.242 @ Tue Feb 28 21:20:40 2023
+31: Requesting "CONNECT www.google.com:443 HTTP/1.1" from www.google.com
+31: Responding "HTTP/1.1 200 OK"
+31: Tunnel closed
