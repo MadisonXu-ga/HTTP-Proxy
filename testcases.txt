@@ -1,0 +1,327 @@
+==========================================
+METHOD---CONNECT
+==========================================
+https://www.google.com
+==========================================
+-Action:[Please wait for 3 minutes to see all the CONNECT method finished with the "tunnel closed" results]
+0: "CONNECT www.google.com:443 HTTP/1.1" from 10.146.91.34 @ Mon Feb 27 19:09:17 2023
+0: Requesting "CONNECT www.google.com:443 HTTP/1.1" from www.google.com
+1: "CONNECT www.gstatic.com:443 HTTP/1.1" from 10.146.91.34 @ Mon Feb 27 19:09:17 2023
+1: Requesting "CONNECT www.gstatic.com:443 HTTP/1.1" from www.gstatic.com
+0: Responding "HTTP/1.1 200 OK"
+1: Responding "HTTP/1.1 200 OK"
+2: "CONNECT aa.google.com:443 HTTP/1.1" from 10.146.91.34 @ Mon Feb 27 19:09:18 2023
+2: Requesting "CONNECT aa.google.com:443 HTTP/1.1" from aa.google.com
+2: Responding "HTTP/1.1 200 OK"
+3: "CONNECT d27xxe7juh1us6.cloudfront.net:443 HTTP/1.1" from 10.146.91.34 @ Mon Feb 27 19:09:18 2023
+3: Requesting "CONNECT d27xxe7juh1us6.cloudfront.net:443 HTTP/1.1" from d27xxe7juh1us6.cloudfront.net
+4: "CONNECT adservice.google.com:443 HTTP/1.1" from 10.146.91.34 @ Mon Feb 27 19:09:18 2023
+4: Requesting "CONNECT adservice.google.com:443 HTTP/1.1" from adservice.google.com
+4: Responding "HTTP/1.1 200 OK"
+3: Responding "HTTP/1.1 200 OK"
+5: "CONNECT play.google.com:443 HTTP/1.1" from 10.146.91.34 @ Mon Feb 27 19:09:18 2023
+5: Requesting "CONNECT play.google.com:443 HTTP/1.1" from play.google.com
+5: Responding "HTTP/1.1 200 OK"
+6: "CONNECT ogs.google.com:443 HTTP/1.1" from 10.146.91.34 @ Mon Feb 27 19:09:22 2023
+6: Requesting "CONNECT ogs.google.com:443 HTTP/1.1" from ogs.google.com
+6: Responding "HTTP/1.1 200 OK"
+7: "CONNECT ssl.gstatic.com:443 HTTP/1.1" from 10.146.91.34 @ Mon Feb 27 19:09:23 2023
+7: Requesting "CONNECT ssl.gstatic.com:443 HTTP/1.1" from ssl.gstatic.com
+7: Responding "HTTP/1.1 200 OK"
+8: "CONNECT beacons2.gvt2.com:443 HTTP/1.1" from 10.146.91.34 @ Mon Feb 27 19:09:40 2023
+8: Requesting "CONNECT beacons2.gvt2.com:443 HTTP/1.1" from beacons2.gvt2.com
+8: Responding "HTTP/1.1 200 OK"
+9: "CONNECT beacons.gcp.gvt2.com:443 HTTP/1.1" from 10.146.91.34 @ Mon Feb 27 19:09:41 2023
+9: Requesting "CONNECT beacons.gcp.gvt2.com:443 HTTP/1.1" from beacons.gcp.gvt2.com
+9: Responding "HTTP/1.1 200 OK"
+10: "CONNECT femetrics.grammarly.io:443 HTTP/1.1" from 10.146.91.34 @ Mon Feb 27 19:10:09 2023
+10: Requesting "CONNECT femetrics.grammarly.io:443 HTTP/1.1" from femetrics.grammarly.io
+10: Responding "HTTP/1.1 200 OK"
+10: Tunnel closed
+7: Tunnel closed
+1: Tunnel closed
+
+
+==========================================
+METHOD---GET
+==========================================
+http://info.cern.ch/hypertext/WWW/TheProject.html
+==========================================
+1: "GET http://info.cern.ch/hypertext/WWW/TheProject.html HTTP/1.1" from 10.146.91.34 @ Mon Feb 27 20:22:25 2023
+1: not in cache
+1: Requesting "GET http://info.cern.ch/hypertext/WWW/TheProject.html HTTP/1.1" from info.cern.ch
+1: Received "HTTP/1.1 304 Not Modified" from    info.cern.ch
+1: Responding "HTTP/1.1 304 Not Modified"
+2: "CONNECT d27xxe7juh1us6.cloudfront.net:443 HTTP/1.1" from 10.146.91.34 @ Mon Feb 27 20:22:26 2023
+2: Requesting "CONNECT d27xxe7juh1us6.cloudfront.net:443 HTTP/1.1" from d27xxe7juh1us6.cloudfront.net
+2: Responding "HTTP/1.1 200 OK"
+3: "CONNECT www.google.com:443 HTTP/1.1" from 10.146.91.34 @ Mon Feb 27 20:22:32 2023
+3: Requesting "CONNECT www.google.com:443 HTTP/1.1" from www.google.com
+3: Responding "HTTP/1.1 200 OK"
+4: "CONNECT play.google.com:443 HTTP/1.1" from 10.146.91.34 @ Mon Feb 27 20:22:32 2023
+4: Requesting "CONNECT play.google.com:443 HTTP/1.1" from play.google.com
+4: Responding "HTTP/1.1 200 OK"
+5: "CONNECT safebrowsing.googleapis.com:443 HTTP/1.1" from 10.146.91.34 @ Mon Feb 27 20:22:33 2023
+5: Requesting "CONNECT safebrowsing.googleapis.com:443 HTTP/1.1" from safebrowsing.googleapis.com
+5: Responding "HTTP/1.1 200 OK"
+6: "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from 10.146.91.34 @ Mon Feb 27 20:22:33 2023
+6: not in cache
+6: Requesting "POST http://ocsp.pki.goog/gts1c3 HTTP/1.1" from ocsp.pki.goog
+7: "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from 10.146.91.34 @ Mon Feb 27 20:22:34 2023
+7: not in cache
+7: Requesting "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from detectportal.firefox.com
+5: Tunnel closed
+8: "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from 10.146.91.34 @ Mon Feb 27 20:22:39 2023
+8: not in cache
+8: Requesting "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from detectportal.firefox.com
+9: "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from 10.146.91.34 @ Mon Feb 27 20:22:44 2023
+9: not in cache
+9: Requesting "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from detectportal.firefox.com
+10: "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from 10.146.91.34 @ Mon Feb 27 20:22:49 2023
+10: not in cache
+10: Requesting "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from detectportal.firefox.com
+11: "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from 10.146.91.34 @ Mon Feb 27 20:22:54 2023
+11: not in cache
+11: Requesting "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from detectportal.firefox.com
+12: "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from 10.146.91.34 @ Mon Feb 27 20:22:59 2023
+12: not in cache
+12: Requesting "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from detectportal.firefox.com
+
+==========================================
+METHOD---POST
+==========================================
+http://httpbin.org/forms/post
+==========================================
+-Action:[Please wait for 1 minutes to see the results]
+0: "GET http://httpbin.org/forms/post HTTP/1.1" from  �t,Vbiz.spectrum.com @ Tue Feb 28 04:01:13 2023
+0: not in cache
+0: Requesting "GET http://httpbin.org/forms/post HTTP/1.1" from httpbin.org
+0: Received "HTTP/1.1 200 OK" from      httpbin.org
+0: Responding "HTTP/1.1 200 OK"
+0: not cacheable because response does not have Etag or Last Modified Time
+1: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from  �t,Vbiz.spectrum.com @ Tue Feb 28 04:01:13 2023
+1: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
+2: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from  �t,Vbiz.spectrum.com @ Tue Feb 28 04:01:13 2023
+2: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
+1: Responding "HTTP/1.1 200 OK"
+2: Responding "HTTP/1.1 200 OK"
+3: "POST http://ocsp.digicert.com/ HTTP/1.1" from  �t,Vbiz.spectrum.com @ Tue Feb 28 04:01:13 2023
+3: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+4: "POST http://httpbin.org/post HTTP/1.1" from  �t,Vbiz.spectrum.com @ Tue Feb 28 04:01:25 2023
+4: Requesting "POST http://httpbin.org/post HTTP/1.1" from httpbin.org
+3: Received "HTTP/1.1 408 Request Timeout" from ocsp.digicert.com
+3: Responding "HTTP/1.1 408 Request Timeout"
+5: "POST http://ocsp.digicert.com/ HTTP/1.1" from  �t,Vbiz.spectrum.com @ Tue Feb 28 04:02:14 2023
+5: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+4: Received "HTTP/1.1 200 OK" from      httpbin.org
+4: Responding "HTTP/1.1 200 OK"
+
+==========================================
+TEST CASE: in-cache valid
+==========================================
+http://info.cern.ch/hypertext/WWW/TheProject.html
+==========================================
+Result: (Click twice)
+8: "GET http://info.cern.ch/hypertext/WWW/TheProject.html HTTP/1.1" from �Y��Ur-01-temp.oit.duke.local @ Mon Feb 27 22:55:01 2023
+8: not in cache
+8: Requesting "GET http://info.cern.ch/hypertext/WWW/TheProject.html HTTP/1.1" from info.cern.ch
+8: Received "HTTP/1.1 304 Not Modified" from    info.cern.ch
+8: Responding "HTTP/1.1 304 Not Modified"
+9: "GET http://info.cern.ch/hypertext/WWW/TheProject.html HTTP/1.1" from �Y��Ur-01-temp.oit.duke.local @ Mon Feb 27 22:55:04 2023
+9: in cache, valid
+9: Responding "HTTP/1.1 304 Not Modified"
+10: "GET http://info.cern.ch/hypertext/WWW/TheProject.html HTTP/1.1" from �Y��Ur-01-temp.oit.duke.local @ Mon Feb 27 22:55:07 2023
+10: in cache, valid
+10: Responding "HTTP/1.1 304 Not Modified"
+
+==========================================
+TEST CASE: Chunked Message
+==========================================
+http://info.cern.ch/hypertext/WWW/TheProject.html
+==========================================
+0: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from �q:�Ur-01-temp.oit.duke.local @ Mon Feb 27 22:57:37 2023
+0: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
+0: Responding "HTTP/1.1 200 OK"
+1: "CONNECT contile-images.services.mozilla.com:443 HTTP/1.1" from �q:�Ur-01-temp.oit.duke.local @ Mon Feb 27 22:57:37 2023
+1: Requesting "CONNECT contile-images.services.mozilla.com:443 HTTP/1.1" from contile-images.services.mozilla.com
+1: Responding "HTTP/1.1 200 OK"
+2: "GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1" from �q:�Ur-01-temp.oit.duke.local @ Mon Feb 27 22:57:38 2023
+2: not in cache
+2: Requesting "GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1" from www.httpwatch.com
+2: Received "HTTP/1.1 200 OK" from      www.httpwatch.com
+2: Responding "HTTP/1.1 200 OK"
+2: not cacheable because response is chunked
+3: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from �q:�Ur-01-temp.oit.duke.local @ Mon Feb 27 22:57:42 2023
+3: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
+3: Responding "HTTP/1.1 200 OK"
+
+==========================================
+TEST CASE: "no-store"
+==========================================
+Hint: using the code of app.py to activate a website and using the proxy to connect to the website.
+http://vcm-xxxxx.vm.duke.edu:[port number]
+==========================================
+0: "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from �;��Ur-01-temp.oit.duke.local @ Tue Feb 28 00:08:22 2023
+0: not in cache
+0: Requesting "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from vcm-30803.vm.duke.edu
+0: Received "HTTP/1.1 200 OK" from      vcm-30803.vm.duke.edu
+0: Responding "HTTP/1.1 200 OK"
+0: not cacheable because response is no-store
+1: "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from �;��Ur-01-temp.oit.duke.local @ Tue Feb 28 00:08:31 2023
+1: not in cache
+1: Requesting "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from vcm-30803.vm.duke.edu
+1: Received "HTTP/1.1 200 OK" from      vcm-30803.vm.duke.edu
+1: Responding "HTTP/1.1 200 OK"
+1: not cacheable because response is no-store
+
+==========================================
+TEST CASE: "no-cache"
+==========================================
+Hint: using the code of app.py to activate a website and using the proxy to connect to the website.
+http://vcm-xxxxx.vm.duke.edu:[port number]
+==========================================
+0: "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from ��[Ubiz.spectrum.com @ Tue Feb 28 03:13:32 2023
+0: not in cache
+0: Requesting "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from vcm-30803.vm.duke.edu
+0: Received "HTTP/1.1 200 OK" from      vcm-30803.vm.duke.edu
+0: Responding "HTTP/1.1 200 OK"
+1: "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from ��[Ubiz.spectrum.com @ Tue Feb 28 03:13:34 2023
+1: in cache, requires validation
+1: Requesting "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from vcm-30803.vm.duke.edu
+1: Received "HTTP/1.1 200 OK"
+1: Responding "HTTP/1.1 200 OK"
+2: "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from ��[Ubiz.spectrum.com @ Tue Feb 28 03:13:37 2023
+2: in cache, requires validation
+2: Requesting "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from vcm-30803.vm.duke.edu
+2: Received "HTTP/1.1 200 OK"
+2: Responding "HTTP/1.1 200 OK"
+
+==========================================
+TEST CASE: "Max-age=20, must-revalidate"
+==========================================
+Hint: using the code of app.py to activate a website and using the proxy to connect to the website.
+http://vcm-xxxxx.vm.duke.edu:[port number]
+==========================================
+0: "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from ��uKVbiz.spectrum.com @ Tue Feb 28 03:09:11 2023
+0: not in cache
+0: Requesting "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from vcm-30803.vm.duke.edu
+0: Received "HTTP/1.1 200 OK" from      vcm-30803.vm.duke.edu
+0: Responding "HTTP/1.1 200 OK"
+1: "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from ��uKVbiz.spectrum.com @ Tue Feb 28 03:09:12 2023
+1: in cache, valid
+1: Responding "HTTP/1.1 200 OK"
+2: "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from ��uKVbiz.spectrum.com @ Tue Feb 28 03:09:16 2023
+2: in cache, valid
+2: Responding "HTTP/1.1 200 OK"
+3: "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from ��uKVbiz.spectrum.com @ Tue Feb 28 03:09:18 2023
+3: in cache, valid
+3: Responding "HTTP/1.1 200 OK"
+4: "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from ��uKVbiz.spectrum.com @ Tue Feb 28 03:09:21 2023
+4: in cache, valid
+4: Responding "HTTP/1.1 200 OK"
+5: "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from ��uKVbiz.spectrum.com @ Tue Feb 28 03:09:25 2023
+5: in cache, valid
+5: Responding "HTTP/1.1 200 OK"
+6: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from ��uKVbiz.spectrum.com @ Tue Feb 28 03:09:25 2023
+6: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
+6: Responding "HTTP/1.1 200 OK"
+7: "POST http://ocsp.digicert.com/ HTTP/1.1" from ��uKVbiz.spectrum.com @ Tue Feb 28 03:09:25 2023
+7: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+8: "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from ��uKVbiz.spectrum.com @ Tue Feb 28 03:09:28 2023
+8: in cache, valid
+8: Responding "HTTP/1.1 200 OK"
+9: "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from ��uKVbiz.spectrum.com @ Tue Feb 28 03:09:30 2023
+9: in cache, valid
+9: Responding "HTTP/1.1 200 OK"
+10: "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from ��uKVbiz.spectrum.com @ Tue Feb 28 03:09:33 2023
+10: in cache, but expired at Tue Feb 28 03:09:31 2023
+10: Requesting "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from vcm-30803.vm.duke.edu
+10: Received "HTTP/1.1 200 OK"
+10: Responding "HTTP/1.1 200 OK"
+
+==========================================
+TEST CASE: "Max-age=10, private"
+==========================================
+Hint: using the code of app.py to activate a website and using the proxy to connect to the website.
+http://vcm-xxxxx.vm.duke.edu:[port number]
+==========================================
+0: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from ���Ubiz.spectrum.com @ Tue Feb 28 03:46:35 2023
+0: Requesting "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from incoming.telemetry.mozilla.org
+0: Responding "HTTP/1.1 200 OK"
+1: "POST http://ocsp.digicert.com/ HTTP/1.1" from ���Ubiz.spectrum.com @ Tue Feb 28 03:46:36 2023
+1: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+2: "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from ���Ubiz.spectrum.com @ Tue Feb 28 03:46:37 2023
+2: not in cache
+2: Requesting "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from vcm-30803.vm.duke.edu
+2: Received "HTTP/1.1 200 OK" from      vcm-30803.vm.duke.edu
+2: Responding "HTTP/1.1 200 OK"
+2: not cacheable because response is private
+3: "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from ���Ubiz.spectrum.com @ Tue Feb 28 03:46:39 2023
+3: not in cache
+3: Requesting "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from vcm-30803.vm.duke.edu
+3: Received "HTTP/1.1 200 OK" from      vcm-30803.vm.duke.edu
+3: Responding "HTTP/1.1 200 OK"
+3: not cacheable because response is private
+
+==========================================
+TEST CASE: no E-tag or Last-Modified
+==========================================
+Hint: using the code of app.py to activate a website and using the proxy to connect to the website.
+http://vcm-xxxxx.vm.duke.edu:[port number]
+==========================================
+0: "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from ЃwvUbiz.spectrum.com @ Tue Feb 28 03:53:13 2023
+0: not in cache
+0: Requesting "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from vcm-30803.vm.duke.edu
+0: Received "HTTP/1.1 200 OK" from      vcm-30803.vm.duke.edu
+0: Responding "HTTP/1.1 200 OK"
+0: not cacheable because response does not have Etag or Last Modified Time
+1: "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from ЃwvUbiz.spectrum.com @ Tue Feb 28 03:53:14 2023
+1: not in cache
+1: Requesting "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from vcm-30803.vm.duke.edu
+1: Received "HTTP/1.1 200 OK" from      vcm-30803.vm.duke.edu
+1: Responding "HTTP/1.1 200 OK"
+1: not cacheable because response does not have Etag or Last Modified Time
+
+==========================================
+TEST CASE: Expire time = Request time + 20 sec
+==========================================
+Hint: using the code of app.py to activate a website and using the proxy to connect to the website.
+http://vcm-xxxxx.vm.duke.edu:[port number]
+==========================================
+0: "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from PtkWUbiz.spectrum.com @ Tue Feb 28 03:56:30 2023
+0: not in cache
+0: Requesting "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from vcm-30803.vm.duke.edu
+0: Received "HTTP/1.1 200 OK" from      vcm-30803.vm.duke.edu
+0: Responding "HTTP/1.1 200 OK"
+1: "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from PtkWUbiz.spectrum.com @ Tue Feb 28 03:56:31 2023
+1: in cache, valid
+1: Responding "HTTP/1.1 200 OK"
+2: "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from PtkWUbiz.spectrum.com @ Tue Feb 28 03:56:40 2023
+2: in cache, valid
+2: Responding "HTTP/1.1 200 OK"
+3: "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from PtkWUbiz.spectrum.com @ Tue Feb 28 03:56:46 2023
+3: in cache, valid
+3: Responding "HTTP/1.1 200 OK"
+4: "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from PtkWUbiz.spectrum.com @ Tue Feb 28 03:56:50 2023
+4: in cache, valid
+4: Responding "HTTP/1.1 200 OK"
+5: "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from PtkWUbiz.spectrum.com @ Tue Feb 28 03:56:52 2023
+5: in cache, but expired at Tue Feb 28 03:56:50 2023
+5: Requesting "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from vcm-30803.vm.duke.edu
+5: Received "HTTP/1.1 200 OK"
+5: Responding "HTTP/1.1 200 OK"
+6: "GET http://vcm-30803.vm.duke.edu:5000/ HTTP/1.1" from PtkWUbiz.spectrum.com @ Tue Feb 28 03:56:56 2023
+6: in cache, valid
+6: Responding "HTTP/1.1 200 OK"
+
+==========================================
+TEST CASE: 400 error
+==========================================
+http://www.mocky.io/v2/5e589a932f0000bd0c962006
+==========================================
+0: "GET http://www.mocky.io/v2/5e589a932f0000bd0c962006 HTTP/1.1" from ��ШUbiz.spectrum.com @ Tue Feb 28 04:07:15 2023
+0: not in cache
+0: Requesting "GET http://www.mocky.io/v2/5e589a932f0000bd0c962006 HTTP/1.1" from www.mocky.io
+0: Received "HTTP/1.1 400 Bad Request" from     www.mocky.io
+0: Responding "HTTP/1.1 400 Bad Request"
+0: not cacheable because response does not have Etag or Last Modified Time

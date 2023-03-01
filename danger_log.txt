@@ -1,0 +1,16 @@
+Danger log:
+
+1. When attempting to parse the request, we discovered that the stoul() function consistently produced errors. Upon reviewing the code, we realized that we had made minor mistakes while using the substr() function.
+
+2. We discovered that basic GET and POST requests were taking an excessive amount of time to process. Upon further investigation, we realized that we had assumed that all responses would be chunked, and therefore ignored those that were not. After modifying our code and adding appropriate conditions, we were able to solve the GET request issue
+
+3. When testing the GET request, we discovered that it took an excessively long time (about 3 minutes) to retrieve chunk data, resulting in a timeout before the result was produced. After investigation, we determined that the issue was caused by a lack of condition to determine whether the entire message had been retrieved.
+
+4. During testing, we discovered that the cache responses never expired, leading us to suspect an issue with converting our local time to UTC timezone. Ultimately, it took us approximately two days to resolve this problem.
+
+5. It is hard to find the http website whcih has cache-control conditions such as max-age, must-revalidate,etc. As a result, we wrote Python to generate an HTTP website and test our test cases.
+
+6. We encountered difficulties while writing the Dockerfile and sought assistance from the TA to help us complete it.
+
+7. Our exception guarantees is basic guarantee.
+
